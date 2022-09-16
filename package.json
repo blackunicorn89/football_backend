@@ -1,0 +1,19 @@
+{
+  "name": "teamdata_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "team",
+    "data"
+  ],
+  "author": "Antti H T Katila",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "express": "^4.18.1"
+  }
+}
