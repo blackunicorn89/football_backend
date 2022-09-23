@@ -67,7 +67,7 @@ isUserLogged = (req, res, next) => {
 
 // ADMIN LOGIN ROUTE (/login) 
 app.post("/login", function (req, res) {
-    if (!req.body.username) {
+    if (!req.body) {
         return res.status(400).json({ message: "Bad Request" });
     }
     if (!req.body.username || !req.body.password) {
