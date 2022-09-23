@@ -3,10 +3,15 @@ const mongoose = require('mongoose');
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 
+// MODELS
+const userModel = require("./models/user");
+const sessionModel = require("./models/session");
+
 let app = express();
+app.use(express.json());
 
+// MONGODB CONNECTION
 let port = process.env.port || 3001;
-
 const mong_user = process.env.TEAMDATA_MONGODB_USERNAME
 const mongo_password = process.env.TEAMDATA_MONGODB_PASSWORD
 const mongo_url = process.env.TEAMDATA_MONGODB_URL
@@ -62,7 +67,7 @@ isUserLogged = (req, res, next) => {
 
 // ADMIN LOGIN ROUTE (/login) 
 app.post("/login", function (req, res) {
-    if (!req.body) {
+    if (!req.body.username) {
         return res.status(400).json({ message: "Bad Request" });
     }
     if (!req.body.username || !req.body.password) {
@@ -117,8 +122,6 @@ app.post("/logout", function (req, res) {
         return res.status(200).json({ message: "Logged out" });
     })
 })
-
-app.use("/api", isUserLogged, apiroute);
 
 app.listen(port)
 console.log(`Running in ${port}`);
