@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 let Schema = mongoose.Schema({
   header: String,
-  Content: String,
-  Date: Date
+  content: String,
+  date: Date
 });
 
 module.exports = mongoose.model("News", Schema);

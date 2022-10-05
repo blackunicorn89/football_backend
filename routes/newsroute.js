@@ -1,74 +1,72 @@
 const express = require('express');
-const playerModel = require("../models/news")
+const newsModel = require("../models/news")
 const router = express.Router();
 
 router.get("/news/", function(req, res) {
     //let query = {"user:":req.session.user}
-    playerModel.find(function(err, players) {
+    newsModel.find(function(err, news) {
         if (err) {
             console.log("Failed to find items. Reason", err)
         }
-        return res.status(200).json(players);
+        return res.status(200).json(news);
     })
 });
 
-/*router.post("/players/", function(req, res){
+router.post("/news/", function(req, res){
     if(!req.body) {
         return res.status(400).json({Message: "Ei bodya"})
     }
-    if (!req.body.player_name) {
-        return res.status(400).json({Message: "Pelaajan nimi puuttu"})
+    if (!req.body.header) {
+        return res.status(400).json({Message: "otsikko puuttuu"})
     }
-    let player = new playerModel ({
-        player_name: req.body.player_name,
-        position: req.body.position,
-        player_number: req.body.player_number,
-        description: req.body.description
-        
 
+    let news_article = new newsModel ({
+        header: req.body.header,
+        content: req.body.content,
+        date: req.body.date
+        
     })
-    player.save(function(err){
+    news_article.save(function(err){
         if(err) {
-            console.log("Failed to create player. Reason", err);
+            console.log("Failed to create the article. Reason", err);
             return res.status(500).json({message: "Internal server error"})
         }
         return res.status(201).json({Message: "Success"})
     })
 })
 
-router.delete("/players/:id", function(req, res) {
-    playerModel.deleteOne({"_id":req.params.id, "user": req.session.user},
+router.delete("/news/:id", function(req, res) {
+    newsModel.deleteOne({"_id":req.params.id},
     function(err) {
         if (err) {
-            console.log("Failed to remove item. Reason", err)
+            console.log("Failed to remove news article. Reason", err)
             return res.status(500).json({message: "Internal server error"})
         }
         return res.status(200).json({message: "Success"})
     })
 })
 
-router.put("/players/:id", function(req, res) {
+router.put("/news/:id", function(req, res) {
     if(!req.body) {
         return res.status(400).json({Message: "Bad request"})
     }
-    if (!req.body.player_name) {
+    if (!req.body.header) {
         return res.status(400).json({Message: "Bad request"})
     }
-    let player = ({
-        player_name: req.body.player_name,
-        position: req.body.position,
-        player_number: req.body.player_number,
-        description: req.body.description
+    let news_article =  ({
+        header: req.body.header,
+        content: req.body.content,
+        date: req.body.date
+        
     })
-    playerModel.replaceOne({"_id":req.params.id, "user": req.session.user},
-    player, function(err) {
+    newsModel.replaceOne({"_id":req.params.id}, news_article, function(err) {
         if (err) {
-            console.log("Failed to update item. Reason", err)
+            console.log("Failed to update news article. Reason", err)
             return res.status(500).json({message: "Internal server error"})
         }
         return res.status(200).json({message: "Success"})
     })
 
     
-}) */
+})
 module.exports = router;
