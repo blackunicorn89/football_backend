@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const apiroute = require('./routes/apiroute');
+const newsroute = require('./routes/newsroute');
 
 // MODELS
 const userModel = require("./models/user");
@@ -124,6 +125,6 @@ app.post("/logout", function (req, res) {
     })
 })
 
-app.use("/api", isUserLogged, apiroute);
+app.use("/api", isUserLogged, apiroute, newsroute);
 app.listen(port)
 console.log(`Running in ${port}`);
