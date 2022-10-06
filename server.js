@@ -1,16 +1,25 @@
 const express = require('express');
+<<<<<<< HEAD
 const mongoose = require('mongoose');
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const apiroute = require('./routes/apiroute');
 const newsroute = require('./routes/newsroute');
+=======
+const bodyParser = require('body-parser');
+const mongoose = require("mongoose");
+>>>>>>> 6ce2079f54727d85312290127a9350707e2fc264
 
-// MODELS
-const userModel = require("./models/user");
-const sessionModel = require("./models/session");
+const HttpError = require('./models/http-error');
 
-let app = express();
-app.use(express.json());
+const usersRoutes = require("./routes/users-routes");
+
+const app = express()
+app.use(bodyParser.json()) //Parse incoming request bodies in a middleware before your handlers, available under the req.body property.
+
+
+app.use("/api/users", usersRoutes); //Users Sign up, Login routes.
+
 
 // MONGODB CONNECTION
 let port = process.env.port || 3001;
@@ -18,6 +27,7 @@ const mong_user = process.env.TEAMDATA_MONGODB_USERNAME
 const mongo_password = process.env.TEAMDATA_MONGODB_PASSWORD
 const mongo_url = process.env.TEAMDATA_MONGODB_URL
 
+<<<<<<< HEAD
 mongoose.connect("mongodb+srv://" + mong_user + ":" + mongo_password + "@" + mongo_url + "/?retryWrites=true&w=majority").then(
     () => console.log("Connected to mongodb"),
     (err) => console.log("Failed to connect. Reason", err)
@@ -128,3 +138,9 @@ app.post("/logout", function (req, res) {
 app.use("/api", isUserLogged, apiroute, newsroute);
 app.listen(port)
 console.log(`Running in ${port}`);
+=======
+mongoose
+  .connect("mongodb+srv://" + mong_user + ":" + mongo_password + "@" + mongo_url + "/?retryWrites=true&w=majority")
+  .then(() => app.listen(port), console.log(`Running in ${port}`))
+  .catch(err => console.log("Failed to connect. Reason", err));
+>>>>>>> 6ce2079f54727d85312290127a9350707e2fc264
