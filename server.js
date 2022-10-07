@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const HttpError = require('./models/http-error');
 
 const usersRoutes = require("./routes/users-routes");
+const newsRoutes = require("./routes/news-routes");
 
 const app = express()
 app.use(bodyParser.json()) //Parse incoming request bodies in a middleware before your handlers, available under the req.body property.
@@ -21,8 +22,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/users", usersRoutes); //Users Sign up, Login routes.
-
+app.use("/api/users", usersRoutes); // Users Sign up, Login routes.
+app.use("/api/", newsRoutes); // Create, Read, Update, Deletete news 
 
 // MONGODB CONNECTION
 let port = process.env.port || 3001;
