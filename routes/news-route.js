@@ -17,4 +17,14 @@ router.post("/news",
   ],
   newsController.addNewsArticle);
 
+  router.put("/news/:id",
+  [
+    check("header").not().isEmpty(),
+    check("content").not().isEmpty(),
+    check("date").not().isEmpty(),
+  ],
+  newsController.editNewsArticle);
+  
+  router.delete("/news/:id", newsController.removeNewsArticle);
+
 module.exports = router;

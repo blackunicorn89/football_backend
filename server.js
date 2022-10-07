@@ -22,7 +22,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/users", newsRoute, usersRoutes); //Users Sign up, Login routes.
+app.use("/api/users", usersRoutes); //Users Sign up, Login routes.
+app.use("/api/", newsRoute); //Users Sign up, Login routes.
 
 
 // MONGODB CONNECTION
