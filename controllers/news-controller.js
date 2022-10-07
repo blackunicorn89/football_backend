@@ -13,7 +13,7 @@ const getNews = async (req, res, next) => {
     let newsArticles;
 
     try {
-       newsArticles  = news.find()
+       newsArticles  = await news.find()
     
       } catch (err) {
         const error = new HttpError("Failed to find articles. Reason",
@@ -22,7 +22,8 @@ const getNews = async (req, res, next) => {
         return next(error);
         
       }
-      res.status(201).json();
+      res.json({ newsArticles: newsArticles.map(article=> article.toObject({ getters: true })) });
+     
 
 
 }
