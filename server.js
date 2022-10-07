@@ -10,6 +10,17 @@ const newsRoute = require("./routes/news-route")
 const app = express()
 app.use(bodyParser.json()) //Parse incoming request bodies in a middleware before your handlers, available under the req.body property.
 
+// Cors Policy
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET", "POST", "PUT", "DELETE");
+  next();
+});
 
 app.use("/api/users", newsRoute, usersRoutes); //Users Sign up, Login routes.
 
