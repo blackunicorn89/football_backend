@@ -1,5 +1,7 @@
 const { validationResult } = require("express-validator");
+const fs = require("fs");
 const HttpError = require("../models/http-error");
+const player = require("../models/player");
 const Player = require("../models/player");
 
 // GET ALL PLAYERS
@@ -18,6 +20,28 @@ const getPlayers = async (req, res, next) => {
   }
   res.json({ players: players.map(player => player.toObject({ getters: true })) });
 };
+
+// GET PLAYER DATA BY ID
+
+const getPlayerById = async (req, res, next) => {
+  const playerId = req.params.id;
+  let player
+
+  try {
+    player = await Player.findById(playerId);
+  } catch (err) {
+    const error = new HttpError("Something went wrong, could not find a player", 500);
+    return next(error);
+  }
+
+  if (!player) {
+    const error = new HttpError("Could not find a player for the provided id.", 404);
+    return next(error)
+  }
+
+  res.status(200).json({ player: player.toObject({ getters: true }) });
+
+}
 
 // LISÄÄ PELAAJA
 
@@ -50,8 +74,17 @@ const addPlayer = async (req, res, next) => {
     return next(error);
   }
 
+  let imagePath;
+
+  if (!req.file) {
+    imagePath = null
+  }
+  else {
+    imagePath = req.file.path
+  }
+
   const createdPlayer = new Player({
-    image: req.file.path,
+    image: imagePath,
     player_name,
     player_number,
     position,
@@ -72,7 +105,90 @@ const addPlayer = async (req, res, next) => {
 
 };
 
+// EDIT PLAYER *Kuvan vaihtaminen tarkistamatta!!!
 
+const editPlayer = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty) {
+    return next(
+      new HttpError("Invalid inputs passed, check your data.", 422)
+    );
+  }
+
+  const { player_name, player_number, position, description } = req.body
+  const playerId = req.params.id
+  let playerImagePath;
+  let player;
+
+  try {
+    player = await Player.findById(playerId);
+  } catch (err) {
+    const error = new HttpError("Something went wrong. could not update", 500
+    );
+    return next(error);
+  }
+
+  if (!req.file) {
+    playerImagePath = player.image
+  }
+  else {
+    playerImagePath = req.file.path
+    fs.unlink(player.image, (err) => {
+      console.log(err)
+    });
+  }
+
+  player.image = playerImagePath;
+  player.player_name = player_name;
+  player.player_number = player_number;
+  player.position = position;
+  player.description = description;
+
+  try {
+    await player.save()
+  } catch (err) {
+    const error = new HttpError("Something went wrong, could not update player", 500);
+    return next(error);
+  };
+
+  res.status(200).json({ player: player.toObject({ getters: true }) });
+
+}
+
+// DELETE PLAYER
+
+const deletePlayer = async (req, res, next) => {
+  const playerId = req.params.id;
+  let player;
+
+  try {
+    player = await Player.findById(playerId);
+  } catch (err) {
+    const error = new HttpError("Something went wrong, could not delete player", 500)
+    return next(error)
+  }
+
+  if (!player) {
+    const error = new HttpError("Could not find player for this Id", 404);
+    return next(error);
+  }
+
+  try {
+    await player.deleteOne();
+  } catch (err) {
+    const error = new HttpError("Removing player failed, please try again", 500)
+    return next(error);
+  }
+
+  fs.unlink(player.image, err => {
+    console.log(err)
+  });
+
+  res.status(201).json({ Message: "Player succesfully Removed" });
+};
 
 exports.getPlayers = getPlayers;
+exports.getPlayerById = getPlayerById;
 exports.addPlayer = addPlayer;
+exports.editPlayer = editPlayer;
+exports.deletePlayer = deletePlayer;

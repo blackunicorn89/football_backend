@@ -1,4 +1,6 @@
 const fs = require("fs");
+const path = require("path")
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
@@ -11,6 +13,8 @@ const playersRoutes = require("./routes/players-routes");
 
 const app = express()
 app.use(bodyParser.json()) //Parse incoming request bodies in a middleware before your handlers, available under the req.body property.
+
+app.use("/uploads/images", express.static(path.join("uploads", "images")));
 
 // Cors Policy
 
