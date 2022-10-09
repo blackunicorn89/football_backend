@@ -26,7 +26,30 @@ const getNews = async (req, res, next) => {
   res.json({ newsArticles: newsArticles.map(article => article.toObject({ getters: true })) });
 };
 
-// LISÄÄ UUSI ARTIKKELI
+// HAE ARTIKKELIA ID:N AVULLA
+
+
+
+const findArtcibleById = async (req, res, next) => {
+  const articleId = req.params.id;
+  let article;
+  try {
+    article = await News.findById(articleId)
+  } catch (err) {
+    const error = new HttpError("Something went wrong, could not find a Article", 500);
+    return next(error);
+  }
+
+  if (!article) {
+    const error = new HttpError("Could not find a article for the provided id.", 404);
+    return next(error)
+  }
+
+  res.status(200).json({ article: article.toObject({ getters: true }) });
+
+};
+
+// LISÄÄ UUSI ARTIKKELI (AUTH)
 
 const addNewsArticle = async (req, res, next) => {
   const errors = validationResult(req);
@@ -53,7 +76,7 @@ const addNewsArticle = async (req, res, next) => {
   res.status(201).json({ Message: "Succesfully created" });
 };
 
-// MUOKKAA ARTIKKELIA
+// MUOKKAA ARTIKKELIA (AUTH)
 
 const editNewsArticle = async (req, res, next) => {
   const errors = validationResult(req);
@@ -88,7 +111,7 @@ const editNewsArticle = async (req, res, next) => {
 
 };
 
-// POISTA ARTIKKELI
+// POISTA ARTIKKELI (AUTH)
 
 const removeNewsArticle = async (req, res, next) => {
   const newsId = req.params.id;
@@ -112,6 +135,7 @@ const removeNewsArticle = async (req, res, next) => {
 };
 
 exports.getNews = getNews;
+exports.findArtcibleById = findArtcibleById;
 exports.addNewsArticle = addNewsArticle;
 exports.editNewsArticle = editNewsArticle;
 exports.removeNewsArticle = removeNewsArticle;

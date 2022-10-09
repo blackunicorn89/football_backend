@@ -1,3 +1,6 @@
+const fs = require("fs");
+const path = require("path")
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
@@ -6,9 +9,12 @@ const HttpError = require('./models/http-error');
 
 const usersRoutes = require("./routes/users-routes");
 const newsRoutes = require("./routes/news-routes");
+const playersRoutes = require("./routes/players-routes");
 
 const app = express()
 app.use(bodyParser.json()) //Parse incoming request bodies in a middleware before your handlers, available under the req.body property.
+
+app.use("/uploads/images", express.static(path.join("uploads", "images")));
 
 // Cors Policy
 
@@ -24,6 +30,24 @@ app.use((req, res, next) => {
 
 app.use("/api/users", usersRoutes); // Users Sign up, Login routes.
 app.use("/api/", newsRoutes); // Create, Read, Update, Deletete news 
+app.use("/api/players", playersRoutes) // Create, Read, Update, Deletete players
+
+
+// GENERAL ERROR HANDLER
+
+app.use((error, req, res, next) => {
+  if (req.file) {
+    fs.unlink(req.file.path, err => {
+      console.log(err);
+    });
+  }
+  if (res.headerSent) {
+    return next(error);
+  }
+  res.status(error.code || 500);
+  res.json({ message: error.message || "An unknown error occurred!" });
+});
+
 
 // MONGODB CONNECTION
 let port = process.env.port || 3001;

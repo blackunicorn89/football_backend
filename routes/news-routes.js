@@ -8,8 +8,10 @@ router = express.Router();
 
 router.get("/news", newsController.getNews);
 
-router.use(checkAuth);
-router.post("/news",
+router.get("/news/:id", newsController.findArtcibleById);
+
+//router.use(checkAuth);
+router.post("/news", checkAuth,
   [
     check("header").not().isEmpty(),
     check("content").not().isEmpty(),
@@ -17,7 +19,7 @@ router.post("/news",
   ],
   newsController.addNewsArticle);
 
-router.put("/news/:id",
+router.put("/news/:id", checkAuth,
   [
     check("header").not().isEmpty(),
     check("content").not().isEmpty(),
@@ -25,6 +27,6 @@ router.put("/news/:id",
   ],
   newsController.editNewsArticle);
 
-router.delete("/news/:id", newsController.removeNewsArticle);
+router.delete("/news/:id", checkAuth, newsController.removeNewsArticle);
 
 module.exports = router;
