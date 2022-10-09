@@ -77,7 +77,7 @@ const addPlayer = async (req, res, next) => {
   let imagePath;
 
   if (!req.file) {
-    imagePath = null
+    imagePath = ""
   }
   else {
     imagePath = req.file.path

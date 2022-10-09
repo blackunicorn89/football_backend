@@ -11,6 +11,7 @@ depencies:
 "mongoose-unique-validator": "^3.1.0", https://www.npmjs.com/package/mongoose-unique-validator
 "nodemon": "^2.0.20", https://www.npmjs.com/package/nodemon
 "uuid": "^9.0.0", https://www.npmjs.com/package/uuid
+ "multer": "^1.4.5-lts.1", https://www.npmjs.com/package/multer
 
 ## Server.js
 
@@ -46,8 +47,10 @@ router.post("/login", usersControllers.login); ==> Myös tälle on oma funktio (
 
 module.exports = router;
 
-## insomnia routet
+### INSOMNIA ROUTET ####
 
+
+## Luo uusi käyttäjä
 POST
 localhost:3001/api/users/signup
 
@@ -58,6 +61,8 @@ localhost:3001/api/users/signup
 "password": "testuser"
 }
 
+
+## Kirjaudu sisään
 POST
 localhost:3001/api/users/login
 
@@ -65,3 +70,78 @@ localhost:3001/api/users/login
 "email": "test@user.com",
 "password": "testuser"
 }
+
+###################################UUTISET##################################
+
+## HAE KAIKKI UUTISET
+GET
+localhost:3001/api/news
+
+## HAE UUTINEN ID:N AVULLA 
+GET
+localhost:3001/api/news/artikkelin id
+
+## LISÄÄ UUTINEN (AUTH) VAATII BEARER TOKENIN
+POST
+localhost:3001/api/news
+
+{
+	"header" : "UUSIN",
+	"content": "Main branch news",
+	"date": "{% now 'iso-8601', '' %}"
+}	
+
+
+## MUOKKAA UUTISTA (AUTH) VAATII BEARER TOKENIN
+PUT
+localhost:3001/api/news/artikkelin id
+
+{
+	"header" : "Muokkaa",
+	"content": "Sisältöä",
+	"date": "{% now 'iso-8601', '' %}"
+	
+}
+
+## POISTA UUTINEN (AUTH) VAATII BEARER TOKENIN
+DELETE
+localhost:3001/api/news/artikkelin id
+
+
+################################ PELAAJAT ##################################
+
+## HAE KAIKKI PELAAJAT
+GET
+localhost:3001/api/players/
+
+## HAE PELAAJA ID:N AVULLA
+GET
+localhost:3001/api/players/pelaajan id
+
+## LISÄÄ UUSI PELAAJA
+POST 
+localhost:3001/api/players/
+
+{
+	"player_name": "test user",
+	"player_number": "100",
+	"position" : "def",
+	"description" : "on"
+}
+
+## Lisää pelaaja + kuva. Ei vaadi bearer tokenia alla mainitusta syystä.
+PELAAJAN TIEDOT + KUVAN SAA MUKAAN Add_player_with_image.html TIEDOSTON AVULLA (en osaa tehdä File pyyntöä insomnian avulla oikeanlaista multiformia).
+
+## MUOKKAA PELAAJAA (AUTH) VAATII BEARER TOKENIN
+PUT
+localhost:3001/api/players/pelaajan id
+{
+	"player_name": "Nimi muutettu",
+	"player_number": "1",
+	"position" : "Maalivahti",
+	"description" : "Kuvaus muokattu"
+}
+
+## POISTA PELAAJA VAATI (AUTH) BEARER TOKENIN
+DELETE
+localhost:3001/api/players/pelaajan id

@@ -1,0 +1,28 @@
+<html>
+  <head> </head>
+  <body>
+    <form
+      action="http://localhost:3001/api/players"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <label>File</label>
+      <input type="file" name="image" />
+      <hr />
+      <label>Player Name</label>
+      <input type="text" name="player_name" />
+      <hr />
+      <label>Player Number</label>
+      <input type="text" name="player_number" />
+      <hr />
+      <label>Position</label>
+      <input type="text" name="position" />
+      <hr />
+      <hr />
+      <label>Description</label>
+      <input type="text" name="description" />
+      <hr />
+      <button type="submit">Lähetä!</button>
+    </form>
+  </body>
+</html>
