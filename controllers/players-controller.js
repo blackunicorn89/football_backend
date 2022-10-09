@@ -4,7 +4,7 @@ const HttpError = require("../models/http-error");
 const player = require("../models/player");
 const Player = require("../models/player");
 
-// GET ALL PLAYERS
+// LISTAA KAIKKI PELAAJAT
 
 const getPlayers = async (req, res, next) => {
 
@@ -21,7 +21,7 @@ const getPlayers = async (req, res, next) => {
   res.json({ players: players.map(player => player.toObject({ getters: true })) });
 };
 
-// GET PLAYER DATA BY ID
+// HAE PALAAJA ID:N AVULLA 
 
 const getPlayerById = async (req, res, next) => {
   const playerId = req.params.id;
@@ -43,7 +43,7 @@ const getPlayerById = async (req, res, next) => {
 
 }
 
-// LISÄÄ PELAAJA
+// LISÄÄ PELAAJA (AUTH)
 
 const addPlayer = async (req, res, next) => {
   const errors = validationResult(req);
@@ -105,7 +105,7 @@ const addPlayer = async (req, res, next) => {
 
 };
 
-// EDIT PLAYER *Kuvan vaihtaminen tarkistamatta!!!
+// MUOKKAA PALAAJAA (AUTH) *Kuvan vaihtaminen tarkistamatta!!!
 
 const editPlayer = async (req, res, next) => {
   const errors = validationResult(req);
@@ -155,7 +155,7 @@ const editPlayer = async (req, res, next) => {
 
 }
 
-// DELETE PLAYER
+// POISTA PELAAJA (AUTH)
 
 const deletePlayer = async (req, res, next) => {
   const playerId = req.params.id;

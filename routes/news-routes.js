@@ -8,6 +8,8 @@ router = express.Router();
 
 router.get("/news", newsController.getNews);
 
+router.get("/news/:id", newsController.findArtcibleById);
+
 //router.use(checkAuth);
 router.post("/news", checkAuth,
   [
