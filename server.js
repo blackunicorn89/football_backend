@@ -29,7 +29,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/users", usersRoutes); // Users Sign up, Login routes.
-app.use("/api/", newsRoutes); // Create, Read, Update, Deletete news 
+app.use("/api/news", newsRoutes); // Create, Read, Update, Deletete news 
 app.use("/api/players", playersRoutes) // Create, Read, Update, Deletete players
 
 

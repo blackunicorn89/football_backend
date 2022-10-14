@@ -6,12 +6,12 @@ const checkAuth = require("../middleware/check-auth")
 
 router = express.Router();
 
-router.get("/news", newsController.getNews);
+router.get("/", newsController.getNews);
 
-router.get("/news/:id", newsController.findArtcibleById);
+router.get("/:id", newsController.findArtcibleById);
 
 //router.use(checkAuth);
-router.post("/news", checkAuth,
+router.post("/", checkAuth,
   [
     check("header").not().isEmpty(),
     check("content").not().isEmpty(),
@@ -19,7 +19,7 @@ router.post("/news", checkAuth,
   ],
   newsController.addNewsArticle);
 
-router.put("/news/:id", checkAuth,
+router.put("/:id", checkAuth,
   [
     check("header").not().isEmpty(),
     check("content").not().isEmpty(),
@@ -27,6 +27,6 @@ router.put("/news/:id", checkAuth,
   ],
   newsController.editNewsArticle);
 
-router.delete("/news/:id", checkAuth, newsController.removeNewsArticle);
+router.delete("/:id", checkAuth, newsController.removeNewsArticle);
 
 module.exports = router;
