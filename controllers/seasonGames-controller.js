@@ -78,9 +78,9 @@ const addSeasonGame = async (req, res, next) => {
 
 };
 
-// MUOKKAA PALAAJAA (AUTH) *Kuvan vaihtaminen tarkistamatta!!!
+// MUOKKAA KAUDEN PELIN TIETOJA (AUTH)
 
-const editPlayer = async (req, res, next) => {
+const editSeasonGame = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty) {
     return next(
@@ -88,80 +88,68 @@ const editPlayer = async (req, res, next) => {
     );
   }
 
-  const { player_name, player_number, position, description } = req.body
-  const playerId = req.params.id
-  let playerImagePath;
-  let player;
+  const { season_name, active, game, final_result, players, goal_makers, description } = req.body
+  const seasonGameId = req.params.id
+  let season_Game;
 
   try {
-    player = await Player.findById(playerId);
+    season_Game = await seasonGame.findById(seasonGameId);
   } catch (err) {
-    const error = new HttpError("Something went wrong. could not update", 500
+    const error = new HttpError("Something went wrong. could not find the season's game by the id", 500
     );
     return next(error);
   }
 
-  if (!req.file) {
-    playerImagePath = player.image
-  }
-  else {
-    playerImagePath = req.file.path
-    fs.unlink(player.image, (err) => {
-      console.log(err)
-    });
-  }
-
-  player.image = playerImagePath;
-  player.player_name = player_name;
-  player.player_number = player_number;
-  player.position = position;
-  player.description = description;
+  season_Game.season_name = season_name,
+  season_Game.active = active,
+  season_Game.game = game,
+  season_Game.final_result = final_result,
+  season_Game.players = players,
+  season_Game.goal_makers = goal_makers,
+  season_Game.description = description
 
   try {
-    await player.save()
+    await season_Game.save()
   } catch (err) {
-    const error = new HttpError("Something went wrong, could not update player", 500);
+    const error = new HttpError("Something went wrong, could not update season's game", 500);
     return next(error);
   };
 
-  res.status(200).json({ player: player.toObject({ getters: true }) });
+  res.status(200).json({ season_Game: season_Game.toObject({ getters: true }) });
 
 }
 
-// POISTA PELAAJA (AUTH)
+// POISTAA KAUDEN PELI (AUTH)
 
-const deletePlayer = async (req, res, next) => {
-  const playerId = req.params.id;
-  let player;
+const deleteSeasonGame = async (req, res, next) => {
+  const seasonGameId = req.params.id;
+  let season_Game;
 
   try {
-    player = await Player.findById(playerId);
+    season_Game = await seasonGame.findById(seasonGameId);
   } catch (err) {
-    const error = new HttpError("Something went wrong, could not delete player", 500)
+    const error = new HttpError("Something went wrong, could not delete season's game", 500)
     return next(error)
   }
 
-  if (!player) {
-    const error = new HttpError("Could not find player for this Id", 404);
+  if (!season_Game) {
+    const error = new HttpError("Could not find season's game by this Id", 404);
     return next(error);
   }
 
   try {
-    await player.deleteOne();
+    await season_Game.deleteOne();
   } catch (err) {
-    const error = new HttpError("Removing player failed, please try again", 500)
+    const error = new HttpError("Removing season's game failed, please try again", 500)
     return next(error);
   }
 
-  fs.unlink(player.image, err => {
-    console.log(err)
-  });
 
-  res.status(201).json({ Message: "Player succesfully Removed" });
+  res.status(201).json({ Message: "Season's game succesfully Removed" });
 };
 
 exports.getSeasonGames = getSeasonGames;
 //exports.getPlayerById = getPlayerById;
 exports.addSeasonGame = addSeasonGame;
-exports.editPlayer = editPlayer;
-exports.deletePlayer = deletePlayer;
+exports.editSeasonGame = editSeasonGame;
+exports.deleteSeasonGame = deleteSeasonGame;

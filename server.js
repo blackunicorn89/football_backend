@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 app.use("/api/users", usersRoutes); // Users Sign up, Login routes.
 app.use("/api/news", newsRoutes); // Create, Read, Update, Deletete news 
 app.use("/api/players", playersRoutes) // Create, Read, Update, Deletete players
-app.use("/api/seasongames", seasonGamesRoutes) // Create, Read, Update, Deletete games ofthe season
+app.use("/api/seasongames", seasonGamesRoutes) // Create, Read, Update, Deletete games of the season
 
 
 // GENERAL ERROR HANDLER

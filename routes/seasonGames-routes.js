@@ -10,8 +10,8 @@ router.get("/", SeasonGamesController.getSeasonGames);
 
 //router.get("/:id", newsController.findArtcibleById);
 
-//router.use(checkAuth);
-router.post("/", 
+router.use(checkAuth);
+router.post("/", checkAuth, 
   [
     check("season_name").not().isEmpty(),
     check("active").not().isEmpty(),
@@ -21,14 +21,16 @@ router.post("/",
   ],
   SeasonGamesController.addSeasonGame);
 
-/*router.put("/:id", checkAuth,
+router.put("/:id", checkAuth,
   [
-    check("header").not().isEmpty(),
-    check("content").not().isEmpty(),
-    check("date").not().isEmpty(),
+    check("season_name").not().isEmpty(),
+    check("active").not().isEmpty(),
+    check("game").not().isEmpty(),
+    check("final_result").not().isEmpty(),
+    check("players").not().isEmpty(),
   ],
-  newsController.editNewsArticle);
+  SeasonGamesController.editSeasonGame);
 
-router.delete("/:id", checkAuth, newsController.removeNewsArticle);*/
+router.delete("/:id", checkAuth, SeasonGamesController.deleteSeasonGame);
 
 module.exports = router;
