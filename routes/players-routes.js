@@ -11,7 +11,7 @@ router = express.Router();
 router.get("/", playersController.getPlayers);
 router.get("/:id", playersController.getPlayerById);
 
-router.post("/", fileUpload.single("image"),
+router.post("/", checkAuth, fileUpload.single("image"),
   [
     check("player_name").not().isEmpty(),
     check("player_number").isNumeric().notEmpty(),
