@@ -8,6 +8,7 @@ const seasonGameSchema = new Schema({
   active: Boolean,
   game: String,
   final_result: String,
+  date: Date,
   players:[String],
   goal_makers:[String],
   description: String

@@ -17,7 +17,8 @@ router.post("/", checkAuth,
     check("active").not().isEmpty(),
     check("game").not().isEmpty(),
     check("final_result").not().isEmpty(),
-    check("players").not().isEmpty(),
+    check("date").not().isEmpty(),
+    check("players").not().isEmpty()
   ],
   SeasonGamesController.addSeasonGame);
 
@@ -27,7 +28,8 @@ router.put("/:id", checkAuth,
     check("active").not().isEmpty(),
     check("game").not().isEmpty(),
     check("final_result").not().isEmpty(),
-    check("players").not().isEmpty(),
+    check("date").not().isEmpty(),
+    check("players").not().isEmpty()
   ],
   SeasonGamesController.editSeasonGame);
 
