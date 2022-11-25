@@ -10,6 +10,7 @@ const HttpError = require('./models/http-error');
 const usersRoutes = require("./routes/users-routes");
 const newsRoutes = require("./routes/news-routes");
 const playersRoutes = require("./routes/players-routes");
+const seasonRoutes = require("./routes/season-routes")
 const seasonGamesRoutes = require("./routes/seasonGames-routes");
 
 const app = express()
@@ -32,6 +33,7 @@ app.use((req, res, next) => {
 app.use("/api/users", usersRoutes); // Users Sign up, Login routes.
 app.use("/api/news", newsRoutes); // Create, Read, Update, Deletete news 
 app.use("/api/players", playersRoutes) // Create, Read, Update, Deletete players
+app.use("/api/seasons", seasonRoutes) // Create, Read, Update, Deletete players
 app.use("/api/seasongames", seasonGamesRoutes) // Create, Read, Update, Deletete games of the season
 
 
