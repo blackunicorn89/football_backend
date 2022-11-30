@@ -5,15 +5,16 @@ const Schema = mongoose.Schema;
 
 const seasonSchema = new Schema({
   season_name: {type: String, unique: true},
-  active: Boolean
+  active: Boolean,
+  seasongame: {type: Schema.Types.ObjectId, ref: 'seasongames'}
 });
 
-const gameOfSeasonSchema = Schema({
+/*const gameOfSeasonSchema = Schema({
   _id: Schema.Types.ObjectId,
   season_name: {type: String, unique: true},
   active: boolean,
   season_games: [{ type: Schema.Types.ObjectId, ref: 'seasongames' }]
-});
+});*/
 
 seasonSchema.plugin(uniqueValidator);
 
