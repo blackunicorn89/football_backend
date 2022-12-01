@@ -10,7 +10,7 @@ const getSeasons = async (req, res, next) => {
   let seasons;
 
   try {
-    seasons = await season.find({season_name: "2022-2023"}).populate("seasonname, game")
+    seasons = await season.find().populate({path:"seasongame", model:"SeasonGame"})
   } catch (err) {
     const error = new HttpError("Fetching seasons failed, please try again later.",
       500

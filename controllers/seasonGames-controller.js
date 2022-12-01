@@ -2,6 +2,10 @@ const { validationResult } = require("express-validator");
 const fs = require("fs");
 const HttpError = require("../models/http-error");
 const seasonGame = require("../models/seasonGame");
+const seasonModel = require("../models/season");
+const mongoose = require('mongoose');
+
+
 
 // LISTAA KAIKKI KAUDEN PELIT
 
@@ -10,7 +14,7 @@ const getSeasonGames = async (req, res, next) => {
   let seasonGames;
 
   try {
-    seasonGames = await seasonGame.find()
+    seasonGames = await seasonGame.find().populate({path:"season", model:"Season"})
   } catch (err) {
     const error = new HttpError("Fetching season's games failed, please try again later.",
       500
@@ -46,6 +50,7 @@ const getSeasonGames = async (req, res, next) => {
 
 const addSeasonGame = async (req, res, next) => {
   const errors = validationResult(req);
+  const toId = mongoose.Types.ObjectId
   if (!errors.isEmpty()) {
     return next(
       new HttpError("Invalid inputs passed, plase check your data", 422)
@@ -53,9 +58,22 @@ const addSeasonGame = async (req, res, next) => {
   }
 
   const { season_name, active, game, final_result, players, goal_makers, description } = req.body
+  let gameSeason = toId
+  
+  /*let seasons;
+  seasons = await seasonModel.find({season_name: season_name})
+  console.log(season_name)
+  gameSeason = toId(seasons)
+  console.log ("Testi")
+  console.log("muuttuuko numeroks")
+  console.log(gameSeason)
+  */
+ season = "63889bba66bfaeb95ccf21e7"
+ 
 
   const createdSeasonGame = new seasonGame({
-    season_name,
+    //season_name,
+    season,
     active,
     game,
     final_result,
@@ -68,7 +86,7 @@ const addSeasonGame = async (req, res, next) => {
     await createdSeasonGame.save();
   } catch (err) {
     const error = new HttpError(
-      "Adding new season game failed, try gain later",
+      "Adding new season game failed, try again later",
       500
     );
     return next(error);

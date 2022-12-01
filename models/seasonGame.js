@@ -5,7 +5,7 @@ const {ObjectId} = mongoose.Schema;
 const Schema = mongoose.Schema;
 
 const seasonGameSchema = new Schema({
-  season: {type: mongoose.Types.ObjectId, ref: "season"},
+  season: {type: mongoose.Types.ObjectId, ref: "Season"},
   active: Boolean,
   game: String,
   final_result: String,
