@@ -2,7 +2,8 @@ const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 const HttpError = require("../models/http-error");
-const User = require("../models/user");
+const MySqlDb = require("../models");
+const User = MySqlDb.User;
 
 const signup = async (req, res, next) => {
   const errors = validationResult(req);
@@ -15,7 +16,7 @@ const signup = async (req, res, next) => {
 
   let existingUser;
   try {
-    existingUser = await User.findOne({ email: email })
+    existingUser = await User.findByPk(email)
 
   } catch (err) {
     const error = new HttpError("Signing up failed, plase try again later.",
@@ -40,16 +41,16 @@ const signup = async (req, res, next) => {
     return next(error);
   }
 
-  const createdUser = new User({
+  const createdUser = {
     firstname,
     lastname,
     email,
     password: hashedPassword,
     admin: true
-  });
+  };
 
   try {
-    await createdUser.save();
+    await User.create(createdUser);
   } catch (err) {
     const error = new HttpError("Creating user failed, please try again", 500)
     return next(error);

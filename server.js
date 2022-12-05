@@ -3,7 +3,9 @@ const path = require("path")
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require("mongoose");
+//const mongoose = require("mongoose");
+const mySqlDb = require("./models");
+
 
 const HttpError = require('./models/http-error');
 
@@ -55,11 +57,15 @@ app.use((error, req, res, next) => {
 
 // MONGODB CONNECTION
 let port = process.env.port || 3001;
-const mong_user = process.env.TEAMDATA_MONGODB_USERNAME
-const mongo_password = process.env.TEAMDATA_MONGODB_PASSWORD
-const mongo_url = process.env.TEAMDATA_MONGODB_URL
+app.listen(port), console.log(`Running in ${port}`)
 
-mongoose
-  .connect("mongodb+srv://" + mong_user + ":" + mongo_password + "@" + mongo_url + "/?retryWrites=true&w=majority")
-  .then(() => app.listen(port), console.log(`Running in ${port}`))
-  .catch(err => console.log("Failed to connect. Reason", err));
+  // Sync MySql databases
+  //In development, you may need to drop existing tables and re-sync database. Just use force: true
+  mySqlDb.sequelize.sync({})
+  .then(() => {
+    console.log("Drop and re-sync db.");
+  })
+  .catch((err) => {
+    console.log("Failed to sync db: " + err.message);
+  });
+

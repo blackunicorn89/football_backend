@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const seasonSchema = new Schema({
   season_name: {type: String, unique: true},
   active: Boolean,
-  seasongame: {type: Schema.Types.ObjectId, ref: 'SeasonGame'}
+  seasongame: [{type: Schema.Types.ObjectId, ref: 'SeasonGame'}]
 });
 
 /*const gameOfSeasonSchema = Schema({
