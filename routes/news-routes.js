@@ -11,7 +11,7 @@ router.get("/", newsController.getNews);
 router.get("/:id", newsController.findArtcibleById);
 
 //router.use(checkAuth);
-router.post("/", //checkAuth,
+router.post("/", checkAuth,
   [
     check("header").not().isEmpty(),
     check("content").not().isEmpty(),
@@ -19,7 +19,7 @@ router.post("/", //checkAuth,
   ],
   newsController.addNewsArticle);
 
-router.put("/:id", //checkAuth,
+router.put("/:id", checkAuth,
   [
     check("header").not().isEmpty(),
     check("content").not().isEmpty(),
@@ -27,6 +27,6 @@ router.put("/:id", //checkAuth,
   ],
   newsController.editNewsArticle);
 
-router.delete("/:id", /*checkAuth,*/ newsController.removeNewsArticle);
+router.delete("/:id", checkAuth, newsController.removeNewsArticle);
 
 module.exports = router;

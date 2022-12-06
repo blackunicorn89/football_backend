@@ -79,7 +79,7 @@ const login = async (req, res, next) => {
   const { email, password } = req.body;
   let existingUser;
   try {
-    existingUser = await User.findOne({ email: email })
+    existingUser = await User.findByPk(email)
 
   } catch (err) {
     const error = new HttpError("Signing up failed, plase try again later.",

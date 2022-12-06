@@ -15,7 +15,7 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false
     },
     email: {
-      type: Sequelize.DATE,
+      type: Sequelize.STRING,
       allowNull: false,
       primaryKey: true
 
