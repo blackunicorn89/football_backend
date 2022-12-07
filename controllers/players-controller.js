@@ -1,8 +1,8 @@
 const { validationResult } = require("express-validator");
 const fs = require("fs");
 const HttpError = require("../models/http-error");
-const player = require("../models/player");
-const Player = require("../models/player");
+const MySqlDb = require("../models");
+const Player = MySqlDb.Player;
 
 // LISTAA KAIKKI PELAAJAT
 
@@ -11,19 +11,19 @@ const getPlayers = async (req, res, next) => {
   let players;
 
   try {
-    players = await Player.find()
+    players = await Player.findAll({})
   } catch (err) {
     const error = new HttpError("Fetching user failed, please try again later.",
       500
     );
     return next(error)
   }
-  res.json({ players: players.map(player => player.toObject({ getters: true })) });
+  res.json(players);
 };
 
-// HAE PALAAJA ID:N AVULLA 
+// HAE PALAAJA ID:N AVULLA. Tarvitaanko? Jos, niin mihin?
 
-const getPlayerById = async (req, res, next) => {
+/*const getPlayerById = async (req, res, next) => {
   const playerId = req.params.id;
   let player
 
@@ -41,7 +41,7 @@ const getPlayerById = async (req, res, next) => {
 
   res.status(200).json({ player: player.toObject({ getters: true }) });
 
-}
+}*/
 
 // LISÄÄ PELAAJA (AUTH)
 
@@ -56,8 +56,10 @@ const addPlayer = async (req, res, next) => {
   const { image, player_name, player_number, position, description } = req.body
 
   let existingPlayer;
+  let existingPlayerNumber =  parseInt(player_number)
+  console.log(typeof existingPlayerNumber)
   try {
-    existingPlayer = await Player.findOne({ player_number: player_number })
+    existingPlayer = await Player.findAll({attributes: ['player_number']}, {where : { player_number: existingPlayerNumber }})
   } catch (err) {
     const error = new HttpError(
       "Adding player failed, please try again later",
@@ -65,8 +67,10 @@ const addPlayer = async (req, res, next) => {
     );
     return next(error);
   }
+  let car = existingPlayer.find(player => player.player_number === existingPlayerNumber);
+  console.log(car.player_number)
 
-  if (existingPlayer) {
+  if (car.player_number === existingPlayerNumber) {
     const error = new HttpError(
       "Player with number" + player_number + " Already exists, try another player number.",
       422
@@ -82,17 +86,18 @@ const addPlayer = async (req, res, next) => {
   else {
     imagePath = req.file.path
   }
-
-  const createdPlayer = new Player({
+   
+  const createdPlayer = {
     image: imagePath,
     player_name,
     player_number,
     position,
     description
-  });
+  };
 
   try {
-    await createdPlayer.save();
+    await Player.create(createdPlayer);
+    console.log("toimii")
   } catch (err) {
     const error = new HttpError(
       "Adding new player failed, try gain later",
@@ -101,7 +106,7 @@ const addPlayer = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(201).json({ player: createdPlayer.toObject({ getters: true }) });
+  res.status(201).json(createdPlayer);
 
 };
 
@@ -188,7 +193,7 @@ const deletePlayer = async (req, res, next) => {
 };
 
 exports.getPlayers = getPlayers;
-exports.getPlayerById = getPlayerById;
+//exports.getPlayerById = getPlayerById;
 exports.addPlayer = addPlayer;
 exports.editPlayer = editPlayer;
 exports.deletePlayer = deletePlayer;

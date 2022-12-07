@@ -9,7 +9,7 @@ const player = require("../models/player");
 router = express.Router();
 
 router.get("/", playersController.getPlayers);
-router.get("/:id", playersController.getPlayerById);
+//router.get("/:id", playersController.getPlayerById);
 
 router.post("/", fileUpload.single("image"),
   [

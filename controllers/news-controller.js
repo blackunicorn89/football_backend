@@ -14,7 +14,7 @@ const getNews = async (req, res, next) => {
       new HttpError("Cannot get news. Please contact to administrator", 422)
     );
   };
-
+ 
   let newsArticles;
   try {
     newsArticles = await News.findAll({})
