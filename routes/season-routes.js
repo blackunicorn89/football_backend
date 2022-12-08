@@ -6,9 +6,11 @@ const checkAuth = require("../middleware/check-auth")
 
 router = express.Router();
 
-router.get("/", SeasonsController.getSeasons);
+
 
 router.use(checkAuth);
+router.get("/", checkAuth, SeasonsController.getSeasons);
+
 router.post("/", checkAuth, 
   [
     check("season_name").not().isEmpty(),
@@ -16,13 +18,13 @@ router.post("/", checkAuth,
   ],
   SeasonsController.addSeason);
 
-router.put("/:id", checkAuth,
+router.put("/:season_name", checkAuth,
   [
     check("season_name").not().isEmpty(),
     check("active").not().isEmpty()
   ],
   SeasonsController.editSeason);
 
-router.delete("/:id", checkAuth, SeasonsController.deleteSeason);
+router.delete("/:season_name", checkAuth, SeasonsController.deleteSeason);
 
 module.exports = router;

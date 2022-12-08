@@ -1,23 +1,24 @@
 const { validationResult } = require("express-validator");
 const fs = require("fs");
 const HttpError = require("../models/http-error");
-const season = require("../models/season");
+const MySqlDb = require("../models");
+const Season = MySqlDb.Season;
 
-// HAKEE KAIKKI KAUDET
+// HAKEE KAIKKI KAUDET (AUTH)
 
 const getSeasons = async (req, res, next) => {
-
+ 
   let seasons;
 
   try {
-    seasons = await season.find({}).populate("seasongame")
+    seasons = await Season.findAll({})
   } catch (err) {
     const error = new HttpError("Fetching seasons failed, please try again later.",
       500
     );
     return next(error)
   }
-  res.json({ seasons: seasons.map(season => season.toObject({ getters: true })) });
+  res.json(seasons);
 };
 
 
@@ -30,16 +31,33 @@ const addSeason = async (req, res, next) => {
       new HttpError("Invalid inputs passed, plase check your data", 422)
     );
   }
-
   const { season_name, active} = req.body
+  let existingSeason
+  try {
+    existingSeason = await Season.findByPk(season_name)
 
-  const createdSeason = new season({
+  } catch (err) {
+    const error = new HttpError("Adding season failed. Pleasy try again later." ,
+      500
+    );
+    return next(error);
+  }
+
+  if (existingSeason) {
+    const error = new HttpError(
+      "Season with name " + season_name + " already exist.",
+      422
+    );
+    return next(error);
+  }
+
+  const createdSeason = {
     season_name,
     active
-  });
+  };
 
   try {
-    await createdSeason.save();
+    await Season.create(createdSeason);
   } catch (err) {
     const error = new HttpError(
       "Adding new season failed, try again later",
@@ -48,7 +66,7 @@ const addSeason = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(201).json({ season: createdSeason.toObject({ getters: true }) });
+  res.status(201).json(createdSeason);
 
 };
 
@@ -63,28 +81,30 @@ const editSeason = async (req, res, next) => {
   }
 
   const { season_name, active} = req.body
-  const seasonId = req.params.id
-  let editSeason;
+  const seasonName = season_name
+  let currentSeason
 
   try {
-    editSeason = await season.findById(seasonId);
+    currentSeason = await Season.findByPk(seasonName);
+    console.log(currentSeason)
   } catch (err) {
-    const error = new HttpError("Something went wrong. could not find the season by the id", 500
+    const error = new HttpError("Something went wrong. could not find the season by the name", 500
     );
     return next(error);
   }
 
-  editSeason.season_name = season_name,
-  editSeason.active = active
+  const editSeason = {
+    active
+  }
 
 try {
-    await editSeason.save()
+    await Season.update(editSeason, {where: {season_name: seasonName}})
   } catch (err) {
-    const error = new HttpError("Something went wrong, could not update season", 500);
+    const error = new HttpError("Something went wrong, could not update the season", 500);
     return next(error);
   };
 
-  res.status(200).json({ editSeason: editSeason.toObject({ getters: true }) });
+  res.status(200).json(editSeason);
 
 }
 
