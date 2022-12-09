@@ -33,8 +33,9 @@ const addSeason = async (req, res, next) => {
   }
   const { season_name, active} = req.body
   let existingSeason
+  let existingSeasonName = season_name
   try {
-    existingSeason = await Season.findByPk(season_name)
+    existingSeason = await Season.findAll({attributes: ['season_name']}, {where : { season_name: existingSeasonName }})
 
   } catch (err) {
     const error = new HttpError("Adding season failed. Pleasy try again later." ,
@@ -43,9 +44,20 @@ const addSeason = async (req, res, next) => {
     return next(error);
   }
 
-  if (existingSeason) {
+  const isFound = existingSeason.some(element => {
+    if (element.season_name === existingSeasonName) {
+       
+      return true;
+    }
+
+      return false;
+
+  });
+
+  //Jos pelaajanumero on olemassa, annetaan virhe eikä jatketa eteenpäin pelaajan tallennukseen.
+  if (isFound) {
     const error = new HttpError(
-      "Season with name " + season_name + " already exist.",
+      "Season with the name " + season_name + " Already exists.",
       422
     );
     return next(error);
@@ -81,24 +93,15 @@ const editSeason = async (req, res, next) => {
   }
 
   const { season_name, active} = req.body
-  const seasonName = season_name
-  let currentSeason
-
-  try {
-    currentSeason = await Season.findByPk(seasonName);
-    console.log(currentSeason)
-  } catch (err) {
-    const error = new HttpError("Something went wrong. could not find the season by the name", 500
-    );
-    return next(error);
-  }
-
+  const seasonId = req.params.id
+  
   const editSeason = {
+    season_name,
     active
   }
 
 try {
-    await Season.update(editSeason, {where: {season_name: seasonName}})
+    await Season.update(editSeason, {where: {id: seasonId}})
   } catch (err) {
     const error = new HttpError("Something went wrong, could not update the season", 500);
     return next(error);
@@ -112,10 +115,9 @@ try {
 
 const deleteSeason = async (req, res, next) => {
   const seasonId = req.params.id;
-  let removeSeason;
 
   try {
-    removeSeason = await season.findById(seasonId);
+    removeSeason = await Season.findByPk(seasonId);
   } catch (err) {
     const error = new HttpError("Something went wrong, could not delete season's game", 500)
     return next(error)
@@ -127,7 +129,7 @@ const deleteSeason = async (req, res, next) => {
   }
 
   try {
-    await removeSeason.deleteOne();
+    await Season.destroy({where: {id: seasonId}});
   } catch (err) {
     const error = new HttpError("Removing season failed, please try again", 500)
     return next(error);

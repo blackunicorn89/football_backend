@@ -1,4 +1,7 @@
-const mongoose = require("mongoose");
+/*const MySqlDb = require("./index.js");
+const Season = MySqlDb.Season;
+
+/*const mongoose = require("mongoose");
 const uniqueValidator = require('mongoose-unique-validator');
 const {ObjectId} = mongoose.Schema; 
 
@@ -26,6 +29,40 @@ const seasonGameSchema = new Schema({
  
 });*/
 
-seasonGameSchema.plugin(uniqueValidator);
+/*module.exports = (sequelize, Sequelize) => {
+  const Seasongame = sequelize.define("seasongame", {
+    season_name: {
+      type: Sequelize.STRING,
+      allowNull: true,
+      foreignKey: true
+    },
+    game: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    final_result: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    players: {
+      type: Sequelize.JSON,
+      allowNull: true,
+    },
+    goal_makers: {
+      type: Sequelize.JSON,
+      allowNull: true,
+    },
+    description: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+  });
 
-module.exports = mongoose.model("SeasonGame", seasonGameSchema);
+  Seasongame.belongsTo(Season);
+  
+  return Seasongame;
+}*/
+
+
+
+

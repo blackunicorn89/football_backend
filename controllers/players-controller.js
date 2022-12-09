@@ -168,7 +168,7 @@ const editPlayer = async (req, res, next) => {
     return next(error);
   };
 
-  res.status(200).json({ Message: "Successfully edited the article with the id " + playerId});
+  res.status(200).json({ Message: "Successfully edited the player with the id " + playerId});
 
 }
 

@@ -1,7 +1,3 @@
-const mongoose = require("mongoose");
-const uniqueValidator = require('mongoose-unique-validator');
-
-const Schema = mongoose.Schema;
 
 /*const seasonSchema = new Schema({
   season_name: {type: String, unique: true},
@@ -14,16 +10,17 @@ module.exports = (sequelize, Sequelize) => {
     season_name: {
       type: Sequelize.STRING,
       allowNull: false,
-      primaryKey: true
+      unique: true
 
     },
     active: {
       type: Sequelize.BOOLEAN,
-      allowNull: false,
-    }
+      allowNull: false, 
+    },
+
   });
 
-  return Season;
+ return Season;
 };
 
 /*const gameOfSeasonSchema = Schema({

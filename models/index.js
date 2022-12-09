@@ -19,6 +19,7 @@ mySQlDb.News = require("./news.js")(sequelize, Sequelize);
 mySQlDb.User = require("./user.js")(sequelize, Sequelize);
 mySQlDb.Player = require("./player.js")(sequelize, Sequelize);
 mySQlDb.Season = require("./season.js")(sequelize, Sequelize);
+//mySQlDb.Seasongame = require("./seasonGame.js")(sequelize, Sequelize);
 
 
 module.exports = mySQlDb;

@@ -18,13 +18,13 @@ router.post("/", checkAuth,
   ],
   SeasonsController.addSeason);
 
-router.put("/:season_name", checkAuth,
+router.put("/:id", checkAuth,
   [
     check("season_name").not().isEmpty(),
     check("active").not().isEmpty()
   ],
   SeasonsController.editSeason);
 
-router.delete("/:season_name", checkAuth, SeasonsController.deleteSeason);
+router.delete("/:id", checkAuth, SeasonsController.deleteSeason);
 
 module.exports = router;
