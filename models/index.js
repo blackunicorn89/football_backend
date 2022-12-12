@@ -19,7 +19,16 @@ mySQlDb.News = require("./news.js")(sequelize, Sequelize);
 mySQlDb.User = require("./user.js")(sequelize, Sequelize);
 mySQlDb.Player = require("./player.js")(sequelize, Sequelize);
 mySQlDb.Season = require("./season.js")(sequelize, Sequelize);
-//mySQlDb.Seasongame = require("./seasonGame.js")(sequelize, Sequelize);
+mySQlDb.Game = require("./game.js")(sequelize, Sequelize);
+
+mySQlDb.Season.hasMany(mySQlDb.Game, {
+  foreignKey: "season_name",
+  sourceKey: "season_name"
+});
+mySQlDb.Game.belongsTo(mySQlDb.Season, {
+  foreignKey: "season_name",
+  targetKey: "season_name"
+});
 
 
 module.exports = mySQlDb;

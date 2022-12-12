@@ -29,12 +29,11 @@ const seasonGameSchema = new Schema({
  
 });*/
 
-/*module.exports = (sequelize, Sequelize) => {
-  const Seasongame = sequelize.define("seasongame", {
+module.exports = (sequelize, Sequelize) => {
+  const Game = sequelize.define("game", {
     season_name: {
       type: Sequelize.STRING,
       allowNull: true,
-      foreignKey: true
     },
     game: {
       type: Sequelize.STRING,
@@ -57,11 +56,9 @@ const seasonGameSchema = new Schema({
       allowNull: true,
     },
   });
-
-  Seasongame.belongsTo(Season);
   
-  return Seasongame;
-}*/
+  return Game;
+}
 
 
 

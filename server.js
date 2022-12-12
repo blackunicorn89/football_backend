@@ -13,7 +13,8 @@ const usersRoutes = require("./routes/users-routes");
 const newsRoutes = require("./routes/news-routes");
 const playersRoutes = require("./routes/players-routes");
 const seasonRoutes = require("./routes/season-routes")
-const seasonGamesRoutes = require("./routes/seasonGames-routes");
+const gamesRoutes = require("./routes/game-routes");
+const seasonGames = require("./routes/seasonGames-routes")
 
 const app = express()
 app.use(bodyParser.json()) //Parse incoming request bodies in a middleware before your handlers, available under the req.body property.
@@ -36,7 +37,8 @@ app.use("/api/users", usersRoutes); // Users Sign up, Login routes.
 app.use("/api/news", newsRoutes); // Create, Read, Update, Deletete news 
 app.use("/api/players", playersRoutes) // Create, Read, Update, Deletete players
 app.use("/api/seasons", seasonRoutes) // Create, Read, Update, Deletete players
-app.use("/api/seasongames", seasonGamesRoutes) // Create, Read, Update, Deletete games of the season
+app.use("/api/games", gamesRoutes) // Create, Read, Update, Deletete games
+app.use("/api/seasongames", seasonGames) // Read games of the season
 
 
 // GENERAL ERROR HANDLER
