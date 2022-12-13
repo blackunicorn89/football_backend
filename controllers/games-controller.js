@@ -54,11 +54,12 @@ const addGame = async (req, res, next) => {
     );
   }
 
-  const { season_name , game, final_result, players, goal_makers, description } = req.body
+  const { season_name , game, played, final_result, players, goal_makers, description } = req.body
   
   const newGame = {
     season_name,
     game,
+    played,
     final_result,
     players,
     goal_makers,
@@ -89,13 +90,14 @@ const editGame = async (req, res, next) => {
     );
   }
 
-  const { season_name, game, final_result, players, goal_makers, description } = req.body
+  const { season_name, game, played, final_result, players, goal_makers, description } = req.body
   const gameId = req.params.id
   let editGame;
 
   editGame = {
     season_name,
     game,
+    played,
     final_result,
     players,
     goal_makers,

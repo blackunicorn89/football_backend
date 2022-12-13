@@ -6,10 +6,10 @@ const checkAuth = require("../middleware/check-auth")
 
 router = express.Router();
 
-
+router.get("/", SeasonsController.getSeasons);
 
 router.use(checkAuth);
-router.get("/", checkAuth, SeasonsController.getSeasons);
+
 
 router.post("/", checkAuth, 
   [

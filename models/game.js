@@ -39,6 +39,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false
     },
+    played: {
+      type: Sequelize.DATE,
+      allowNull: false
+    },
     final_result: {
       type: Sequelize.STRING,
       allowNull: false,
