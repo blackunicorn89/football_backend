@@ -1,29 +1,30 @@
 const { validationResult } = require("express-validator");
 const fs = require("fs");
 const HttpError = require("../models/http-error");
-const player = require("../models/player");
-const Player = require("../models/player");
+const MySqlDb = require("../models");
+const Player = MySqlDb.Player;
+
 
 // LISTAA KAIKKI PELAAJAT
 
-const getPlayers = async (req, res, next) => {
+const getPlayers = async (req, res, next) => { 
 
   let players;
 
   try {
-    players = await Player.find()
+    players = await Player.findAll({})
   } catch (err) {
-    const error = new HttpError("Fetching user failed, please try again later.",
+    const error = new HttpError("Fetching players failed, please try again later.",
       500
     );
     return next(error)
   }
-  res.json({ players: players.map(player => player.toObject({ getters: true })) });
+  res.json(players);
 };
 
-// HAE PALAAJA ID:N AVULLA 
+// HAE PALAAJA ID:N AVULLA. Tarvitaanko? Jos, niin mihin?
 
-const getPlayerById = async (req, res, next) => {
+/*const getPlayerById = async (req, res, next) => {
   const playerId = req.params.id;
   let player
 
@@ -41,7 +42,7 @@ const getPlayerById = async (req, res, next) => {
 
   res.status(200).json({ player: player.toObject({ getters: true }) });
 
-}
+}*/
 
 // LISÄÄ PELAAJA (AUTH)
 
@@ -53,11 +54,12 @@ const addPlayer = async (req, res, next) => {
     );
   }
 
-  const { image, player_name, player_number, position, description } = req.body
+  const { player_name, player_number, position, description } = req.body
 
   let existingPlayer;
+  let existingPlayerNumber =  parseInt(player_number)
   try {
-    existingPlayer = await Player.findOne({ player_number: player_number })
+    existingPlayer = await Player.findAll({attributes: ['player_number']}, {where : { player_number: existingPlayerNumber }})
   } catch (err) {
     const error = new HttpError(
       "Adding player failed, please try again later",
@@ -66,9 +68,21 @@ const addPlayer = async (req, res, next) => {
     return next(error);
   }
 
-  if (existingPlayer) {
+  //Tarkistetaanko löytyyko palautetusta objektitaulukosta pelaajanumero. Jos löytyy palautetaan false, jos ei löydy palautetaan false 
+  const isFound = existingPlayer.some(element => {
+    if (element.player_number === existingPlayerNumber) {
+       
+      return true;
+    }
+
+      return false;
+
+  });
+
+  //Jos pelaajanumero on olemassa, annetaan virhe eikä jatketa eteenpäin pelaajan tallennukseen.
+  if (isFound) {
     const error = new HttpError(
-      "Player with number" + player_number + " Already exists, try another player number.",
+      "Player with number " + player_number + " Already exists, try another player number.",
       422
     );
     return next(error);
@@ -82,30 +96,31 @@ const addPlayer = async (req, res, next) => {
   else {
     imagePath = req.file.path
   }
-
-  const createdPlayer = new Player({
+   
+  const createdPlayer = {
     image: imagePath,
     player_name,
     player_number,
     position,
     description
-  });
+  };
 
   try {
-    await createdPlayer.save();
+    await Player.create(createdPlayer);
+    console.log("toimii")
   } catch (err) {
     const error = new HttpError(
-      "Adding new player failed, try gain later",
+      "Adding new player failed, try again later",
       500
     );
     return next(error);
   }
 
-  res.status(201).json({ player: createdPlayer.toObject({ getters: true }) });
+  res.status(201).json(createdPlayer);
 
 };
 
-// MUOKKAA PALAAJAA (AUTH) *Kuvan vaihtaminen tarkistamatta!!!
+// MUOKKAA PELAAJAA (AUTH) *Kuvan vaihtaminen tarkistamatta!!!
 
 const editPlayer = async (req, res, next) => {
   const errors = validationResult(req);
@@ -121,9 +136,9 @@ const editPlayer = async (req, res, next) => {
   let player;
 
   try {
-    player = await Player.findById(playerId);
+    player = await Player.findByPk(playerId);
   } catch (err) {
-    const error = new HttpError("Something went wrong. could not update", 500
+    const error = new HttpError("Something went wrong. could not update the player information", 500
     );
     return next(error);
   }
@@ -138,20 +153,22 @@ const editPlayer = async (req, res, next) => {
     });
   }
 
-  player.image = playerImagePath;
-  player.player_name = player_name;
-  player.player_number = player_number;
-  player.position = position;
-  player.description = description;
+  const editedPlayer = {
+  playerImagePath,
+  player_name,
+  player_number,
+  position,
+  description
+  }
 
   try {
-    await player.save()
+    await Player.update(editedPlayer, {where: {id: playerId}})
   } catch (err) {
     const error = new HttpError("Something went wrong, could not update player", 500);
     return next(error);
   };
 
-  res.status(200).json({ player: player.toObject({ getters: true }) });
+  res.status(200).json(editedPlayer);
 
 }
 
@@ -162,7 +179,7 @@ const deletePlayer = async (req, res, next) => {
   let player;
 
   try {
-    player = await Player.findById(playerId);
+    player = await Player.findByPk(playerId);
   } catch (err) {
     const error = new HttpError("Something went wrong, could not delete player", 500)
     return next(error)
@@ -174,7 +191,7 @@ const deletePlayer = async (req, res, next) => {
   }
 
   try {
-    await player.deleteOne();
+    await Player.destroy({where: {id: playerId}});
   } catch (err) {
     const error = new HttpError("Removing player failed, please try again", 500)
     return next(error);
@@ -188,7 +205,7 @@ const deletePlayer = async (req, res, next) => {
 };
 
 exports.getPlayers = getPlayers;
-exports.getPlayerById = getPlayerById;
+//exports.getPlayerById = getPlayerById;
 exports.addPlayer = addPlayer;
 exports.editPlayer = editPlayer;
 exports.deletePlayer = deletePlayer;

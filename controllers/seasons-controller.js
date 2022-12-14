@@ -1,23 +1,24 @@
 const { validationResult } = require("express-validator");
 const fs = require("fs");
 const HttpError = require("../models/http-error");
-const season = require("../models/season");
+const MySqlDb = require("../models");
+const Season = MySqlDb.Season;
 
-// HAKEE KAIKKI KAUDET
+// HAKEE KAIKKI KAUDET (AUTH)
 
 const getSeasons = async (req, res, next) => {
-
+ 
   let seasons;
 
   try {
-    seasons = await season.find()
+    seasons = await Season.findAll({})
   } catch (err) {
     const error = new HttpError("Fetching seasons failed, please try again later.",
       500
     );
     return next(error)
   }
-  res.json({ seasons: seasons.map(season => season.toObject({ getters: true })) });
+  res.json(seasons);
 };
 
 
@@ -30,16 +31,45 @@ const addSeason = async (req, res, next) => {
       new HttpError("Invalid inputs passed, plase check your data", 422)
     );
   }
-
   const { season_name, active} = req.body
+  let existingSeason
+  let existingSeasonName = season_name
+  try {
+    existingSeason = await Season.findAll({attributes: ['season_name']}, {where : { season_name: existingSeasonName }})
 
-  const createdSeason = new season({
-    season_name,
-    active
+  } catch (err) {
+    const error = new HttpError("Adding season failed. Pleasy try again later." ,
+      500
+    );
+    return next(error);
+  }
+
+  const isFound = existingSeason.some(element => {
+    if (element.season_name === existingSeasonName) {
+       
+      return true;
+    }
+
+      return false;
+
   });
 
+  //Jos Kausi on olemassa, annetaan virhe eikä jatketa eteenpäin kauden tallennukseen.
+  if (isFound) {
+    const error = new HttpError(
+      "Season with the name " + season_name + " Already exists.",
+      422
+    );
+    return next(error);
+  }
+
+  const createdSeason = {
+    season_name,
+    active
+  };
+
   try {
-    await createdSeason.save();
+    await Season.create(createdSeason);
   } catch (err) {
     const error = new HttpError(
       "Adding new season failed, try again later",
@@ -48,7 +78,7 @@ const addSeason = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(201).json({ season: createdSeason.toObject({ getters: true }) });
+  res.status(201).json(createdSeason);
 
 };
 
@@ -64,27 +94,20 @@ const editSeason = async (req, res, next) => {
 
   const { season_name, active} = req.body
   const seasonId = req.params.id
-  let editSeason;
-
-  try {
-    editSeason = await season.findById(seasonId);
-  } catch (err) {
-    const error = new HttpError("Something went wrong. could not find the season by the id", 500
-    );
-    return next(error);
+  
+  const editSeason = {
+    season_name,
+    active
   }
 
-  editSeason.season_name = season_name,
-  editSeason.active = active
-
 try {
-    await editSeason.save()
+    await Season.update(editSeason, {where: {id: seasonId}})
   } catch (err) {
-    const error = new HttpError("Something went wrong, could not update season", 500);
+    const error = new HttpError("Something went wrong, could not update the season", 500);
     return next(error);
   };
 
-  res.status(200).json({ editSeason: editSeason.toObject({ getters: true }) });
+  res.status(200).json(editSeason);
 
 }
 
@@ -92,12 +115,11 @@ try {
 
 const deleteSeason = async (req, res, next) => {
   const seasonId = req.params.id;
-  let removeSeason;
 
   try {
-    removeSeason = await season.findById(seasonId);
+    removeSeason = await Season.findByPk(seasonId);
   } catch (err) {
-    const error = new HttpError("Something went wrong, could not delete season's game", 500)
+    const error = new HttpError("Something went wrong, could not delete the season", 500)
     return next(error)
   }
 
@@ -107,7 +129,7 @@ const deleteSeason = async (req, res, next) => {
   }
 
   try {
-    await removeSeason.deleteOne();
+    await Season.destroy({where: {id: seasonId}});
   } catch (err) {
     const error = new HttpError("Removing season failed, please try again", 500)
     return next(error);
@@ -116,7 +138,6 @@ const deleteSeason = async (req, res, next) => {
 
   res.status(201).json({ Message: "Season succesfully Removed" });
 };
-
 
 exports.getSeasons = getSeasons;
 exports.addSeason = addSeason;

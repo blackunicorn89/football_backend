@@ -15,7 +15,7 @@ router.post("/", checkAuth,
   [
     check("header").not().isEmpty(),
     check("content").not().isEmpty(),
-    check("date").not().isEmpty(),
+    check("published").not().isEmpty(),
   ],
   newsController.addNewsArticle);
 
@@ -23,7 +23,7 @@ router.put("/:id", checkAuth,
   [
     check("header").not().isEmpty(),
     check("content").not().isEmpty(),
-    check("date").not().isEmpty(),
+    check("published").not().isEmpty(),
   ],
   newsController.editNewsArticle);
 

@@ -1,11 +1,17 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+//This Sequelize Model represents news table in MySQL database. These columns will be generated automatically: id, header, content, date, createdAt, updatedAt.
+module.exports = (sequelize, Sequelize) => {
+  const News = sequelize.define("news", {
+    header: {
+      type: Sequelize.STRING
+    },
+    content: {
+      type: Sequelize.STRING
+    },
+    published: {
+      type: Sequelize.DATE
+    }
+  });
 
-const newsSchema = new Schema({
-  header: String,
-  content: String,
-  date: Date
-});
-
-module.exports = mongoose.model("News", newsSchema);
+  return News;
+};
 

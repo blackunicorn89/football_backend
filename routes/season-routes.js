@@ -9,6 +9,8 @@ router = express.Router();
 router.get("/", SeasonsController.getSeasons);
 
 router.use(checkAuth);
+
+
 router.post("/", checkAuth, 
   [
     check("season_name").not().isEmpty(),

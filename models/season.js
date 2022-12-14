@@ -1,13 +1,20 @@
-const mongoose = require("mongoose");
-const uniqueValidator = require('mongoose-unique-validator');
+//This Sequelize Model represents season table in MySQL database. These columns will be generated automatically: id, season, active, createdAt, updatedAt.
+module.exports = (sequelize, Sequelize) => {
+  const Season = sequelize.define("season", {
+    season_name: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      unique: true
 
-const Schema = mongoose.Schema;
+    },
+    active: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false, 
+    },
 
-const seasonSchema = new Schema({
-  season_name: {type: String, unique: true},
-  active: Boolean
-});
+  });
 
-seasonSchema.plugin(uniqueValidator);
+ return Season;
+};
 
-module.exports = mongoose.model("Season", seasonSchema);
+

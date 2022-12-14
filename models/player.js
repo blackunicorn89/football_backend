@@ -1,16 +1,31 @@
-const mongoose = require("mongoose");
-const uniqueValidator = require('mongoose-unique-validator');
+//This Sequelize Model represents players table in MySQL database. These columns will be generated automatically: id, image, player_name, player_number, position, description,
+ //createdAt, updatedAt.
 
-const Schema = mongoose.Schema;
+module.exports = (sequelize, Sequelize) => {
+  const Player = sequelize.define("player", {
+    image: {
+      type: Sequelize.STRING,
+      allowNull: true
+    },
+    player_name: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    player_number: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      unique: true
 
-const playerSchema = new Schema({
-  image: { type: String },
-  player_name: String,
-  player_number: { type: Number, unique: true },
-  position: String,
-  description: String,
-});
-
-playerSchema.plugin(uniqueValidator);
-
-module.exports = mongoose.model("Player", playerSchema);
+    },
+    position: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    description: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    }
+  });
+  
+  return Player;
+}
