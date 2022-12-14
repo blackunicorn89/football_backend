@@ -1,34 +1,5 @@
-/*const MySqlDb = require("./index.js");
-const Season = MySqlDb.Season;
-
-/*const mongoose = require("mongoose");
-const uniqueValidator = require('mongoose-unique-validator');
-const {ObjectId} = mongoose.Schema; 
-
-const Schema = mongoose.Schema;
-
-const seasonGameSchema = new Schema({
-  season: {type: mongoose.Types.ObjectId, ref: "Season"},
-  active: Boolean,
-  game: String,
-  final_result: String,
-  players:[String],
-  goal_makers:[String],
-  description: String
- 
-});
-
-/*const seasonGameSchema = new Schema({
-  season_name: { type: ObjectId, ref: 'season' },
-  active: Boolean,
-  game: String,
-  final_result: String,
-  players:[String],
-  goal_makers:[String],
-  description: String
- 
-});*/
-
+//This Sequelize Model represents game table in MySQL database. These columns will be generated automatically: id, season_name, game, played, final_result,
+//players, goal_makers, description, createdAt, updatedAt.
 module.exports = (sequelize, Sequelize) => {
   const Game = sequelize.define("game", {
     season_name: {

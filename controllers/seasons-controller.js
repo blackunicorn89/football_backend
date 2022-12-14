@@ -54,7 +54,7 @@ const addSeason = async (req, res, next) => {
 
   });
 
-  //Jos pelaajanumero on olemassa, annetaan virhe eikä jatketa eteenpäin pelaajan tallennukseen.
+  //Jos Kausi on olemassa, annetaan virhe eikä jatketa eteenpäin kauden tallennukseen.
   if (isFound) {
     const error = new HttpError(
       "Season with the name " + season_name + " Already exists.",
@@ -119,7 +119,7 @@ const deleteSeason = async (req, res, next) => {
   try {
     removeSeason = await Season.findByPk(seasonId);
   } catch (err) {
-    const error = new HttpError("Something went wrong, could not delete season's game", 500)
+    const error = new HttpError("Something went wrong, could not delete the season", 500)
     return next(error)
   }
 
@@ -138,7 +138,6 @@ const deleteSeason = async (req, res, next) => {
 
   res.status(201).json({ Message: "Season succesfully Removed" });
 };
-
 
 exports.getSeasons = getSeasons;
 exports.addSeason = addSeason;

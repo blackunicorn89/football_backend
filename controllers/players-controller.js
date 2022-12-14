@@ -14,7 +14,7 @@ const getPlayers = async (req, res, next) => {
   try {
     players = await Player.findAll({})
   } catch (err) {
-    const error = new HttpError("Fetching user failed, please try again later.",
+    const error = new HttpError("Fetching players failed, please try again later.",
       500
     );
     return next(error)
@@ -138,7 +138,7 @@ const editPlayer = async (req, res, next) => {
   try {
     player = await Player.findByPk(playerId);
   } catch (err) {
-    const error = new HttpError("Something went wrong. could not update", 500
+    const error = new HttpError("Something went wrong. could not update the player information", 500
     );
     return next(error);
   }
@@ -168,7 +168,7 @@ const editPlayer = async (req, res, next) => {
     return next(error);
   };
 
-  res.status(200).json({ Message: "Successfully edited the player with the id " + playerId});
+  res.status(200).json(editedPlayer);
 
 }
 

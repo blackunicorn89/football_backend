@@ -1,9 +1,4 @@
-const mongoose = require("mongoose");
-const uniqueValidator = require('mongoose-unique-validator');
-
-const Schema = mongoose.Schema;
-
-//This Sequelize Model represents user table in MySQL database. These columns will be generated automatically: id, header, content, date, createdAt, updatedAt.
+//This Sequelize Model represents user table in MySQL database. These columns will be generated automatically: id, firstname, lastname, email, password, admin, createdAt, updatedAt.
 module.exports = (sequelize, Sequelize) => {
   const User = sequelize.define("user", {
     firstname: {
@@ -32,16 +27,3 @@ module.exports = (sequelize, Sequelize) => {
 
   return User;
 };
-
-
-/*const userSchema = new Schema({
-  firstname: String,
-  lastname: String,
-  email: { type: String, unique: true },
-  password: String,
-  admin: { type: Boolean }
-});
-
-userSchema.plugin(uniqueValidator);
-
-module.exports = mongoose.model("User", userSchema);*/

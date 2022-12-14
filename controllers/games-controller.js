@@ -123,11 +123,9 @@ const deleteGame = async (req, res, next) => {
   try {
     await MySqlGameModel.destroy({where:{id: gameId}});
   } catch (err) {
-    const error = new HttpError("Removing season's game failed, please try again", 500)
+    const error = new HttpError("Removing game failed, please try again", 500)
     return next(error);
   }
-
-
   res.status(201).json({ Message: "Game succesfully Removed" });
 };
 

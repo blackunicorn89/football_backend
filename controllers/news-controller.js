@@ -25,21 +25,18 @@ const getNews = async (req, res, next) => {
     return next(error);
   }
 
-  //res.json({ newsArticles: newsArticles.map(article => article.toObject({ getters: true })) });
   res.json(newsArticles);
 };
 
 // HAE ARTIKKELIA ID:N AVULLA
 
-
-
 const findArtcibleById = async (req, res, next) => {
   const articleId = req.params.id;
   let article;
   try {
-    article = await News.findById(articleId)
+    article = await News.findByPk(articleId)
   } catch (err) {
-    const error = new HttpError("Something went wrong, could not find a Article", 500);
+    const error = new HttpError("Something went wrong, could not find article", 500);
     return next(error);
   }
 
@@ -48,7 +45,7 @@ const findArtcibleById = async (req, res, next) => {
     return next(error)
   }
 
-  res.status(200).json({ article: article.toObject({ getters: true }) });
+  res.status(200).json(article);
 
 };
 
@@ -105,7 +102,7 @@ const editNewsArticle = async (req, res, next) => {
     return next(error);
   };
 
-  res.status(200).json({ Message: "Successfully edited the article with the id" +  newsId});
+  res.status(200).json(EditedNewsArticle);
 
 };
 

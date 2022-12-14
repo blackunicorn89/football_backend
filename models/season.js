@@ -1,10 +1,4 @@
-
-/*const seasonSchema = new Schema({
-  season_name: {type: String, unique: true},
-  active: Boolean,
-  seasongame: [{type: Schema.Types.ObjectId, ref: 'SeasonGame'}]
-});*/
-
+//This Sequelize Model represents season table in MySQL database. These columns will be generated automatically: id, season, active, createdAt, updatedAt.
 module.exports = (sequelize, Sequelize) => {
   const Season = sequelize.define("season", {
     season_name: {
@@ -23,14 +17,4 @@ module.exports = (sequelize, Sequelize) => {
  return Season;
 };
 
-/*const gameOfSeasonSchema = Schema({
-  _id: Schema.Types.ObjectId,
-  season_name: {type: String, unique: true},
-  active: boolean,
-  season_games: [{ type: Schema.Types.ObjectId, ref: 'seasongames' }]
-});*/
-
-//seasonSchema.plugin(uniqueValidator);
-
-//module.exports = mongoose.model("Season", seasonSchema);
 
