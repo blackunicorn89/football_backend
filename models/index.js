@@ -1,35 +1,35 @@
-const mySqlDbConfig = require("../config/mysqldb.config.js");
+const PostgresSqlDbConfig = require("../config/postgressqldb.config");
 
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize(mySqlDbConfig.DB, mySqlDbConfig.USER, mySqlDbConfig.PASSWORD, {
-  host: mySqlDbConfig.HOST,
-  dialect: mySqlDbConfig.dialect,
+const sequelize = new Sequelize(PostgresSqlDbConfig.DB, PostgresSqlDbConfig.USER, PostgresSqlDbConfig.PASSWORD, {
+  host: PostgresSqlDbConfig.HOST,
+  dialect: PostgresSqlDbConfig.dialect,
   operatorsAliases: 0,
 
  
   }
 );
 
-const mySQlDb = {};
+const postgresSQlDb = {};
 
-mySQlDb.Sequelize = Sequelize;
-mySQlDb.sequelize = sequelize;
+postgresSQlDb.Sequelize = Sequelize;
+postgresSQlDb.sequelize = sequelize;
 
-mySQlDb.News = require("./news.js")(sequelize, Sequelize);
-mySQlDb.User = require("./user.js")(sequelize, Sequelize);
-mySQlDb.Player = require("./player.js")(sequelize, Sequelize);
-mySQlDb.Season = require("./season.js")(sequelize, Sequelize);
-mySQlDb.Game = require("./game.js")(sequelize, Sequelize);
+postgresSQlDb.News = require("./news.js")(sequelize, Sequelize);
+postgresSQlDb.User = require("./user.js")(sequelize, Sequelize);
+postgresSQlDb.Player = require("./player.js")(sequelize, Sequelize);
+postgresSQlDb.Season = require("./season.js")(sequelize, Sequelize);
+postgresSQlDb.Game = require("./game.js")(sequelize, Sequelize);
 
 //Creates assosiacation between the tables season and game
-mySQlDb.Season.hasMany(mySQlDb.Game, {
+postgresSQlDb.Season.hasMany(postgresSQlDb.Game, {
   foreignKey: "season_name",
   sourceKey: "season_name"
 });
-mySQlDb.Game.belongsTo(mySQlDb.Season, {
+postgresSQlDb.Game.belongsTo(postgresSQlDb.Season, {
   foreignKey: "season_name",
   targetKey: "season_name"
 });
 
 
-module.exports = mySQlDb;
+module.exports = postgresSQlDb;

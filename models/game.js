@@ -19,11 +19,11 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
     },
     players: {
-      type: Sequelize.JSON,
+      type: Sequelize.JSONB,
       allowNull: true,
     },
     goal_makers: {
-      type: Sequelize.JSON,
+      type: Sequelize.JSONB,
       allowNull: true,
     },
     description: {
