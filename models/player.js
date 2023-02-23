@@ -21,6 +21,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false,
     },
+    goal_points: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0
+    },
     description: {
       type: Sequelize.STRING,
       allowNull: true,
