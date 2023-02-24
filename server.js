@@ -15,7 +15,7 @@ const playersRoutes = require("./routes/players-routes");
 const seasonRoutes = require("./routes/season-routes")
 const gamesRoutes = require("./routes/game-routes");
 const seasonGames = require("./routes/seasonGames-routes")
-const editGoalPointsRoutes = require("./routes/goalPoints-routes")
+const addGoalPointsRoute = require("./routes/addGoalPoints-route")
 
 const app = express()
 app.use(bodyParser.json()) //Parse incoming request bodies in a middleware before your handlers, available under the req.body property.
@@ -39,7 +39,7 @@ app.use("/api/news", newsRoutes); // Create, Read, Update, Deletete news
 app.use("/api/players", playersRoutes) // Create, Read, Update, Deletete players
 app.use("/api/seasons", seasonRoutes) // Create, Read, Update, Deletete players
 app.use("/api/games", gamesRoutes) // Create, Read, Update, Deletete games
-app.use("/api/games/editgoalpoints", editGoalPointsRoutes) // Create, Read, Update, Deletete games
+app.use("/api/games/addgoalpoints", addGoalPointsRoute) // Create, Read, Update, Deletete games
 app.use("/api/seasongames", seasonGames) // Read games of the season
 
 
