@@ -6,7 +6,7 @@ const Player = PostgreSqlDb.Player;
 
 
 // Lisää pelaajan pisteet (AUTH)
-const addGoalPoints = async (req, res, next) => {
+const removeGoalPoints = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
@@ -17,7 +17,7 @@ const addGoalPoints = async (req, res, next) => {
   //Muuttujat
   let currentGoalMakerPoints = 0;
   let goalMakerId = 0;
-  let newGoalMakerPoints = 0;
+  let deleteGoalMakerPoints = 0;
   let goal_points = 0 
 
   //Otetaan vastaan taulukko, joka sisältää json-objektina pelaajan nimen, id:n ja pisteet. Taulukko on json-objektin sisällä. Tauluun viitataan muodossa goal_makers.goal_makers 
@@ -34,8 +34,8 @@ const addGoalPoints = async (req, res, next) => {
       //Muuttuja, johon otetaan talteen pelaajan id. Alustetaan jokaisen loopin alussa nollaksi virheiden välttämiseksi
       goalMakerId = 0;
 
-      //Muuttuja, johon otetaan talteen pelaajalle lisättävät pisteet. Alustetaan jokaisen loopin alussa nollaksi virheiden välttämiseksi
-      newGoalMakerPoints = 0;
+      //Muuttuja, johon otetaan talteen pelaajalta poistettavat pisteet. Alustetaan jokaisen loopin alussa nollaksi virheiden välttämiseksi
+      deleteGoalMakerPoints = 0;
 
       //Muuttuja, johon otetaan talteen nykyiset pisteet tietokannasta. Alustetaan jokaisen loopin alussa nollaksi virheiden välttämiseksi. Muuttuja vastaa nimeltään
       //tietokannan sarakketta, jonka arvo päivitetään
@@ -44,10 +44,9 @@ const addGoalPoints = async (req, res, next) => {
       //Otetaan talteen pelaajan id
       goalMakerId = parseInt(goal_makers.goal_makers[i].id)
 
-      //Otetaan talteen pisteet, jotka lisätään pelaajalle
-      newGoalMakerPoints = parseInt(goal_makers.goal_makers[i].points)
-      //console.log("Pelaajan id: " + points[i].id + " pelajaan nimi: "+ points[i].id + " pelaajan pisteet " + points[i].points)
-
+      //Otetaan talteen pisteet, jotka vähennetään pelaajata
+      deleteGoalMakerPoints = parseInt(goal_makers.goal_makers[i].points)
+     
       //Haetaan id:n avulla tietokannasta pelaajan tiedoilla sarake goal_points
       const goalMaker = await Player.findByPk(goalMakerId, {
         attributes: ["goal_points"]
@@ -56,16 +55,16 @@ const addGoalPoints = async (req, res, next) => {
       //Otetaan talteen nykyiset pisteet
       currentGoalMakerPoints = goalMaker.goal_points
 
-      //Päivitetään pisteet lisäämällä nykyisiin pisteisiin uudet pisteet
-      goal_points = currentGoalMakerPoints + newGoalMakerPoints
+      //Päivitetään pisteet vähentämällä nykyisistä pisteistä poistettavat pisteet
+      goal_points = currentGoalMakerPoints - deleteGoalMakerPoints
       
       //Muodostetaan objekti, jolla päivitetään tiedot kantaan
-      const addGoalPoints = {
+      const deleteGoalPoints = {
         goal_points
       } 
 
       //Päivitetään kantaan pelaajan uudet pisteet
-      Player.update(addGoalPoints, {where:{id: goalMakerId}})
+      Player.update(deleteGoalPoints, {where:{id: goalMakerId}})
     
     }
    
@@ -80,4 +79,4 @@ const addGoalPoints = async (req, res, next) => {
   res.status(201).json("Pisteiden päivitys onnistui");
 
 };
-exports.addGoalPoints = addGoalPoints;
+exports.removeGoalPoints = removeGoalPoints;
