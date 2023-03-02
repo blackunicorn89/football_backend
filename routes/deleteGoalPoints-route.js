@@ -1,6 +1,6 @@
 const express = require("express");
 const { check } = require("express-validator")
-const removeGoalPointsController = require("../controllers/removeGoalPoints-controller")
+const deleteGoalPointsController = require("../controllers/deleteGoalPoints-controller")
 const checkAuth = require("../middleware/check-auth")
 
 router = express.Router();
@@ -11,6 +11,6 @@ router.post("/", checkAuth,
   [
     check("goal_makers").not().isEmpty(),
   ],
-  removeGoalPointsController.removeGoalPoints);
+  deleteGoalPointsController.deleteGoalPoints);
 
 module.exports = router;

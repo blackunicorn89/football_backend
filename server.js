@@ -3,9 +3,7 @@ const path = require("path")
 
 const express = require('express');
 const bodyParser = require('body-parser');
-//const mongoose = require("mongoose");
-const mySqlDb = require("./models");
-
+const postgreSqlDb = require("./models");
 
 const HttpError = require('./models/http-error');
 
@@ -16,7 +14,8 @@ const seasonRoutes = require("./routes/season-routes")
 const gamesRoutes = require("./routes/game-routes");
 const seasonGames = require("./routes/seasonGames-routes")
 const addGoalPointsRoute = require("./routes/addGoalPoints-route")
-const removeGoalPointsRoute = require("./routes/removeGoalPoints-route")
+const deleteGoalPointsRoute = require("./routes/deleteGoalPoints-route")
+const editGoalPointsRoute = require("./routes/editGoalPoints-route")
 
 const app = express()
 app.use(bodyParser.json()) //Parse incoming request bodies in a middleware before your handlers, available under the req.body property.
@@ -24,7 +23,6 @@ app.use(bodyParser.json()) //Parse incoming request bodies in a middleware befor
 app.use("/uploads/images", express.static(path.join("uploads", "images")));
 
 // Cors Policy
-
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -40,13 +38,13 @@ app.use("/api/news", newsRoutes); // Create, Read, Update, Deletete news
 app.use("/api/players", playersRoutes) // Create, Read, Update, Deletete players
 app.use("/api/seasons", seasonRoutes) // Create, Read, Update, Deletete players
 app.use("/api/games", gamesRoutes) // Create, Read, Update, Deletete games
-app.use("/api/games/addgoalpoints", addGoalPointsRoute) // Updates player's goal points 
-app.use("/api/games/removegoalpoints", removeGoalPointsRoute) // Removes player's goal points 
-app.use("/api/seasongames", seasonGames) // Read games of the season
+app.use("/api/games/addgoalpoints", addGoalPointsRoute) // Adds player's goal points 
+app.use("/api/games/deletegoalpoints", deleteGoalPointsRoute) // Deletes player's goal points 
+app.use("/api/games/editgoalpoints", editGoalPointsRoute) // Deletes player's goal points 
+app.use("/api/seasongames", seasonGames) // Reads games of the season
 
 
 // GENERAL ERROR HANDLER
-
 app.use((error, req, res, next) => {
   if (req.file) {
     fs.unlink(req.file.path, err => {
@@ -61,13 +59,13 @@ app.use((error, req, res, next) => {
 });
 
 
-// MONGODB CONNECTION
+//GENEREAL RUNNING INFORMATION
 let port = process.env.port || 3001;
 app.listen(port), console.log(`Running in ${port}`)
 
-  // Sync MySql databases
+  // Sync PostgreSql databases
   //In development, you may need to drop existing tables and re-sync database. Just use force: true
-  mySqlDb.sequelize.sync({})
+  postgreSqlDb.sequelize.sync({})
   .then(() => {
     console.log("Drop and re-sync db.");
   })

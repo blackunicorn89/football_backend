@@ -6,7 +6,7 @@ const Player = PostgreSqlDb.Player;
 
 
 // Lisää pelaajan pisteet (AUTH)
-const removeGoalPoints = async (req, res, next) => {
+const deleteGoalPoints = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
@@ -21,11 +21,11 @@ const removeGoalPoints = async (req, res, next) => {
   let goal_points = 0 
 
   //Otetaan vastaan taulukko, joka sisältää json-objektina pelaajan nimen, id:n ja pisteet. Taulukko on json-objektin sisällä. Tauluun viitataan muodossa goal_makers.goal_makers 
-  const goal_makers = req.body
+  const { goal_makers } = req.body
   try {
 
     //käydään lävitse taulukko ja lisätään pelaajalle pisteet
-    for (i = 0; i < goal_makers.goal_makers.length; i ++) {
+    for (i = 0; i < goal_makers.length; i ++) {
 
       
       //Muuttuja, johon otetaan talteen pelaajan nykyiset pisteet. Alustetaan jokaisen loopin alussa nollaksi virheiden välttämiseksi
@@ -42,10 +42,10 @@ const removeGoalPoints = async (req, res, next) => {
       goal_points = 0 
 
       //Otetaan talteen pelaajan id
-      goalMakerId = parseInt(goal_makers.goal_makers[i].id)
+      goalMakerId = parseInt(goal_makers[i].id)
 
       //Otetaan talteen pisteet, jotka vähennetään pelaajata
-      deleteGoalMakerPoints = parseInt(goal_makers.goal_makers[i].points)
+      deleteGoalMakerPoints = parseInt(goal_makers[i].points)
      
       //Haetaan id:n avulla tietokannasta pelaajan tiedoilla sarake goal_points
       const goalMaker = await Player.findByPk(goalMakerId, {
@@ -76,7 +76,7 @@ const removeGoalPoints = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(201).json("Pisteiden päivitys onnistui");
+  res.status(201).json("Pisteiden poisto onnistui");
 
 };
-exports.removeGoalPoints = removeGoalPoints;
+exports.deleteGoalPoints = deleteGoalPoints;
