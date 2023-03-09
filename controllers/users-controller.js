@@ -2,8 +2,8 @@ const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 const HttpError = require("../models/http-error");
-const MySqlDb = require("../models");
-const User = MySqlDb.User;
+const PostgreSqlDb = require("../models");
+const User = PostgreSqlDb.User;
 
 const signup = async (req, res, next) => {
   const errors = validationResult(req);

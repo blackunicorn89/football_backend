@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
-const MySqlDb = require("../models");
-const News = MySqlDb.News;
+const PostgreSqlDb = require("../models");
+const News = PostgreSqlDb.News;
 //const Op = MySqlDb.Sequelize.Op;
 
 

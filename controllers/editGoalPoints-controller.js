@@ -5,7 +5,7 @@ const PostgreSqlDb = require("../models");
 const Player = PostgreSqlDb.Player;
 
 
-//Muokkaa pelaajan pisteet (AUTH)
+//Muokkaa pelaajan pisteet (AUTH). 
 const editGoalPoints = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

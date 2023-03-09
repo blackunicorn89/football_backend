@@ -1,4 +1,4 @@
-//This Sequelize Model represents user table in MySQL database. These columns will be generated automatically: id, firstname, lastname, email, password, admin, createdAt, updatedAt.
+//This Sequelize Model represents user table in PostgreSQL database. These columns will be generated automatically: id, firstname, lastname, email, password, admin, createdAt, updatedAt.
 module.exports = (sequelize, Sequelize) => {
   const User = sequelize.define("user", {
     firstname: {

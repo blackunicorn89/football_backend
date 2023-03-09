@@ -20,15 +20,15 @@ const addGoalPoints = async (req, res, next) => {
   let newGoalMakerPoints = 0;
   let goal_points = 0 
 
-  //Otetaan vastaan taulukko, joka sisältää json-objektina pelaajan nimen, id:n ja pisteet. Taulukko on json-objektin sisällä. Tauluun viitataan muodossa goal_makers.goal_makers 
+  //Otetaan vastaan taulukko, joka sisältää json-objektina pelaajan nimen, id:n ja pisteet.
   const {goal_makers} = req.body
   try {
 
-    //käydään lävitse taulukko ja lisätään pelaajalle pisteet
+    //käydään lävitse taulukko ja lisätään pelaajalle pisteet sen mukaisesti
     for (i = 0; i < goal_makers.length; i ++) {
 
       
-      //Muuttuja, johon otetaan talteen pelaajan nykyiset pisteet. Alustetaan jokaisen loopin alussa nollaksi virheiden välttämiseksi
+      //Apumuuttuja, johon otetaan talteen pelaajan nykyiset pisteet. Alustetaan jokaisen loopin alussa nollaksi virheiden välttämiseksi
       currentGoalMakerPoints = 0;
       
       //Muuttuja, johon otetaan talteen pelaajan id. Alustetaan jokaisen loopin alussa nollaksi virheiden välttämiseksi

@@ -1,8 +1,8 @@
 const { validationResult } = require("express-validator");
 const fs = require("fs");
 const HttpError = require("../models/http-error");
-const MySqlDb = require("../models");
-const MySqlGameModel = MySqlDb.Game;
+const Postgresql = require("../models");
+const PostgreSqlGameModel = Postgresql.Game;
 
 
 // LISTAA KAIKKI KAUDEN PELIT
@@ -12,7 +12,7 @@ const getGames = async (req, res, next) => {
   let games;
 
   try {
-    games = await MySqlGameModel.findAll({})
+    games = await PostgreSqlGameModel.findAll({})
   } catch (err) {
     const error = new HttpError("Fetching games failed, please try again later.",
       500
@@ -67,7 +67,7 @@ const addGame = async (req, res, next) => {
   };
 
   try {
-    await MySqlGameModel.create(newGame);
+    await PostgreSqlGameModel.create(newGame);
   } catch (err) {
     const error = new HttpError(
       "Adding new game failed, try again later",
@@ -105,7 +105,7 @@ const editGame = async (req, res, next) => {
   }
 
   try {
-    await MySqlGameModel.update(editGame, {where: {id: gameId}})
+    await PostgreSqlGameModel.update(editGame, {where: {id: gameId}})
   } catch (err) {
     const error = new HttpError("Something went wrong, could not update the game", 500);
     return next(error);
@@ -121,7 +121,7 @@ const deleteGame = async (req, res, next) => {
   const gameId = req.params.id;
 
   try {
-    await MySqlGameModel.destroy({where:{id: gameId}});
+    await PostgreSqlGameModel.destroy({where:{id: gameId}});
   } catch (err) {
     const error = new HttpError("Removing game failed, please try again", 500)
     return next(error);

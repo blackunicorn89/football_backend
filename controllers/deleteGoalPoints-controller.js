@@ -20,15 +20,15 @@ const deleteGoalPoints = async (req, res, next) => {
   let deleteGoalMakerPoints = 0;
   let goal_points = 0 
 
-  //Otetaan vastaan taulukko, joka sisältää json-objektina pelaajan nimen, id:n ja pisteet. Taulukko on json-objektin sisällä. Tauluun viitataan muodossa goal_makers.goal_makers 
+  //Otetaan vastaan taulukko, joka sisältää json-objektina pelaajan nimen, id:n ja pisteet. Taulukko on json-objektin sisällä. 
   const { goal_makers } = req.body
   try {
 
-    //käydään lävitse taulukko ja lisätään pelaajalle pisteet
+    //käydään lävitse taulukko ja vähennetään pelaajalta pisteet sen perusteella
     for (i = 0; i < goal_makers.length; i ++) {
 
       
-      //Muuttuja, johon otetaan talteen pelaajan nykyiset pisteet. Alustetaan jokaisen loopin alussa nollaksi virheiden välttämiseksi
+      //Apumuuttuja, johon otetaan talteen pelaajan nykyiset pisteet. Alustetaan jokaisen loopin alussa nollaksi virheiden välttämiseksi
       currentGoalMakerPoints = 0;
       
       //Muuttuja, johon otetaan talteen pelaajan id. Alustetaan jokaisen loopin alussa nollaksi virheiden välttämiseksi
@@ -52,18 +52,23 @@ const deleteGoalPoints = async (req, res, next) => {
         attributes: ["goal_points"]
       })
 
-      //Otetaan talteen nykyiset pisteet
+      //Otetaan  apumuuttujaan talteen nykyiset pisteet
       currentGoalMakerPoints = goalMaker.goal_points
 
       //Päivitetään pisteet vähentämällä nykyisistä pisteistä poistettavat pisteet
       goal_points = currentGoalMakerPoints - deleteGoalMakerPoints
+
+      //Tarkistetaan, etteivät pisteet mene alle nollan. Jos menevät, asetetaan pisteet nollaksi
+      if (goal_points < 0) {
+        goal_points = 0
+      }
       
       //Muodostetaan objekti, jolla päivitetään tiedot kantaan
       const deleteGoalPoints = {
         goal_points
       } 
 
-      //Päivitetään kantaan pelaajan uudet pisteet
+      //Päivitetään kantaan pelaajalta vähennetyt pisteet
       Player.update(deleteGoalPoints, {where:{id: goalMakerId}})
     
     }

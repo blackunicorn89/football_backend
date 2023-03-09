@@ -1,6 +1,6 @@
 const HttpError = require("../models/http-error");
-const MySqlDb = require("../models");
-const Season = MySqlDb.Season;
+const PostgreSqlDb = require("../models");
+const Season = PostgreSqlDb.Season;
 
 // HAKEE KAIKKI KAUDET (AUTH)
 

@@ -1,4 +1,4 @@
-//This Sequelize Model represents players table in MySQL database. These columns will be generated automatically: id, image, player_name, player_number, position, description,
+//This Sequelize Model represents players table in PostgreSQL database. These columns will be generated automatically: id, image, player_name, player_number, position, description,
  //createdAt, updatedAt.
 
 module.exports = (sequelize, Sequelize) => {

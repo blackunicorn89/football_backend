@@ -1,8 +1,8 @@
 const { validationResult } = require("express-validator");
 const fs = require("fs");
 const HttpError = require("../models/http-error");
-const MySqlDb = require("../models");
-const Player = MySqlDb.Player;
+const PostgreSqlDb = require("../models");
+const Player = PostgreSqlDb.Player;
 
 
 // LISTAA KAIKKI PELAAJAT
