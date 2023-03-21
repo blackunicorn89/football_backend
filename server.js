@@ -38,7 +38,7 @@ app.use("/api/news", newsRoutes); // Create, Read, Update, Deletete news
 app.use("/api/players", playersRoutes) // Create, Read, Update, Deletete players
 app.use("/api/seasons", seasonRoutes) // Create, Read, Update, Deletete players
 app.use("/api/games", gamesRoutes) // Create, Read, Update, Deletete games
-app.use("/api/games/addgoalpoints", addGoalPointsRoute) // Adds player's goal points 
+//app.use("/api/games/addgoalpoints", addGoalPointsRoute) // Adds player's goal points 
 app.use("/api/games/deletegoalpoints", deleteGoalPointsRoute) // Deletes player's goal points 
 app.use("/api/games/editgoalpoints", editGoalPointsRoute) // Edits player's goal points 
 app.use("/api/seasongames", seasonGames) // Reads games of the season

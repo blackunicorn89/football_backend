@@ -1,8 +1,8 @@
 const { validationResult } = require("express-validator");
-const fs = require("fs");
 const HttpError = require("../models/http-error");
 const Postgresql = require("../models");
 const PostgreSqlGameModel = Postgresql.Game;
+const addGoalPointsController = require("../controllers/addGoalPoints-controller")
 
 
 // LISTAA KAIKKI KAUDEN PELIT
@@ -55,7 +55,8 @@ const addGame = async (req, res, next) => {
   }
 
   const { season_name , game, played, final_result, players, goal_makers, description } = req.body
-  
+  const goalMkers = goal_makers
+
   const newGame = {
     season_name,
     game,
@@ -75,7 +76,16 @@ const addGame = async (req, res, next) => {
     );
     return next(error);
   }
-
+  try {
+    await addGoalPointsController.addGoalPoints(goalMkers)
+  }
+  catch {
+    const error = new HttpError(
+      "Adding points failed, try again later",
+      500
+    );
+    return next(error);
+  }
   res.status(201).json(newGame);
 
 };

@@ -12,7 +12,9 @@ const getPlayers = async (req, res, next) => {
   let players;
 
   try {
-    players = await Player.findAll({})
+    players = await Player.findAll({order: [
+      ["player_name"]
+    ]})
   } catch (err) {
     const error = new HttpError("Fetching players failed, please try again later.",
       500
