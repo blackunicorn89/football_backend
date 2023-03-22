@@ -2,8 +2,7 @@ const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 const Postgresql = require("../models");
 const PostgreSqlGameModel = Postgresql.Game;
-const addGoalPointsController = require("../controllers/addGoalPoints-controller")
-
+const playersController = require("./players-controller")
 
 // LISTAA KAIKKI KAUDEN PELIT
 
@@ -55,7 +54,9 @@ const addGame = async (req, res, next) => {
   }
 
   const { season_name , game, played, final_result, players, goal_makers, description } = req.body
-  const goalMkers = goal_makers
+
+  //Otetaan maalintekijät talteen erilliseen muuttujaan, jota tarvitaan pelaajan pisteiden lisäykseen
+  const goalMakers = goal_makers
 
   const newGame = {
     season_name,
@@ -76,23 +77,15 @@ const addGame = async (req, res, next) => {
     );
     return next(error);
   }
-  try {
-    await addGoalPointsController.addGoalPoints(goalMkers)
-  }
-  catch {
-    const error = new HttpError(
-      "Adding points failed, try again later",
-      500
-    );
-    return next(error);
-  }
+    //Jos pelin lisäys onnistuu, kutsutaan metodia, joka päivittää pelaajille pisteet tehdyistä maaleista
+    playersController.addGoalPoints(goalMakers)
   res.status(201).json(newGame);
 
 };
 
 // MUOKKAA KAUDEN PELIN TIETOJA (AUTH)
 
-const editGame = async (req, res, next) => {
+const editGame = async (req, res, next) => { 
   const errors = validationResult(req);
   if (!errors.isEmpty) {
     return next(
@@ -100,8 +93,12 @@ const editGame = async (req, res, next) => {
     );
   }
 
-  const { season_name, game, played, final_result, players, goal_makers, description } = req.body
+  const { season_name, game, played, final_result, players, goal_makers, current_goal_makers, description } = req.body
   const gameId = req.params.id
+  const newGoalMakers = goal_makers
+  const currentGoalMakers = current_goal_makers
+  console.log("nykyiset pelaajat")
+  console.log(currentGoalMakers)
   let editGame;
 
   editGame = {
@@ -120,7 +117,9 @@ const editGame = async (req, res, next) => {
     const error = new HttpError("Something went wrong, could not update the game", 500);
     return next(error);
   };
-
+  
+  playersController.editGoalPoints(currentGoalMakers, newGoalMakers)
+  
   res.status(200).json(editGame);
 
 }
