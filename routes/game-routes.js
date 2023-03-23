@@ -31,6 +31,5 @@ router.put("/:id", checkAuth,
   ],
   GamesController.editGame);
 
-router.delete("/:id", checkAuth, GamesController.deleteGame);
 
 module.exports = router;

@@ -97,8 +97,6 @@ const editGame = async (req, res, next) => {
   const gameId = req.params.id
   const newGoalMakers = goal_makers
   const currentGoalMakers = current_goal_makers
-  console.log("nykyiset pelaajat")
-  console.log(currentGoalMakers)
   let editGame;
 
   editGame = {
@@ -124,10 +122,12 @@ const editGame = async (req, res, next) => {
 
 }
 
-// POISTAA KAUDEN PELI (AUTH)
+// POISTAA KAUDEN PELIN (AUTH)
 
 const deleteGame = async (req, res, next) => {
+  
   const gameId = req.params.id;
+  const { goal_makers } = req.body;
 
   try {
     await PostgreSqlGameModel.destroy({where:{id: gameId}});
@@ -135,6 +135,7 @@ const deleteGame = async (req, res, next) => {
     const error = new HttpError("Removing game failed, please try again", 500)
     return next(error);
   }
+  playersController.deleteGoalPoints(goal_makers)
   res.status(201).json({ Message: "Game succesfully Removed" });
 };
 
