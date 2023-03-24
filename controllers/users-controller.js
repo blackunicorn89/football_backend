@@ -74,6 +74,69 @@ const signup = async (req, res, next) => {
 
 };
 
+// POISTAA KÄYTTÄJÄN (AUTH)
+
+const removeUser= async (req, res, next) => {
+  const userId = req.params.id;
+
+  try {
+    User.destroy({where: {id: userId}})
+  } catch (err) {
+    const error = new HttpError("Removing user failed, please try again", 500);
+    return next(error);
+  };
+
+  res.status(201).json({ Message: "User Succesfully Removed" });
+};
+
+const editUser = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError("Invalid inputs passed, please check your data", 422)
+    );
+  }
+  
+  const { firstname, lastname, email, password } = req.body
+  const userId = req.params.id
+
+  let existingUser;
+
+  if (existingUser) {
+    const error = new HttpError(
+      "User already exists, please try another username.",
+      422
+    );
+    return next(error);
+  }
+
+  let hashedPassword;
+  try {
+    hashedPassword = await bcrypt.hash(password, 12)
+  } catch (err) {
+    const error = new HttpError("Could not update user, pleasy try again.", 500);
+    return next(error);
+  }
+
+  const editUser = {
+    firstname,
+    lastname,
+    email,
+    password: hashedPassword,
+    admin: true
+  };
+
+  try {
+    await User.update(editUser, {where: {id: userId}});
+  } catch (err) {
+    const error = new HttpError("Editing user failed, please try again", 500)
+    return next(error);
+  }
+  res.status(201).json({ userId: editUser.id, email: editUser.email});
+
+};
+
+
 const login = async (req, res, next) => {
 
   const { email, password } = req.body;
@@ -136,3 +199,5 @@ const login = async (req, res, next) => {
 
 exports.signup = signup;
 exports.login = login;
+exports.removeUser = removeUser;
+exports.editUser = editUser;
