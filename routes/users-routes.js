@@ -5,6 +5,8 @@ const usersControllers = require("../controllers/users-controller")
 
 router = express.Router();
 
+router.get("/getusers", usersControllers.getUsers);
+
 router.post("/signup",
   [
     check("firstname").not().isEmpty(),

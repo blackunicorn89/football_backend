@@ -5,6 +5,29 @@ const HttpError = require("../models/http-error");
 const PostgreSqlDb = require("../models");
 const User = PostgreSqlDb.User;
 
+const getUsers = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError("Cannot get users. Please contact to administrator", 422)
+    );
+  };
+ 
+  let Users;
+  try {
+    Users = await User.findAll({
+      attributes: ["id", "firstname", "lastname", "email", "admin"]
+    })
+  } catch (err) {
+    const error = new HttpError("Failed to find users. Reason",
+      500
+    );
+    return next(error);
+  }
+
+  res.json(Users);
+};
+
 const signup = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -132,7 +155,7 @@ const editUser = async (req, res, next) => {
     const error = new HttpError("Editing user failed, please try again", 500)
     return next(error);
   }
-  res.status(201).json({ userId: editUser.id, email: editUser.email});
+  res.status(201).json("User's information successfully edited");
 
 };
 
@@ -197,6 +220,7 @@ const login = async (req, res, next) => {
 
 };
 
+exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
 exports.removeUser = removeUser;
