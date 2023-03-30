@@ -120,10 +120,11 @@ const editUser = async (req, res, next) => {
     );
   }
   
-  const { firstname, lastname, email, password } = req.body
+  const { firstname, lastname, email, password, admin } = req.body
   const userId = req.params.id
 
   let existingUser;
+  let editUser = {}
 
   if (existingUser) {
     const error = new HttpError(
@@ -133,21 +134,32 @@ const editUser = async (req, res, next) => {
     return next(error);
   }
 
-  let hashedPassword;
-  try {
-    hashedPassword = await bcrypt.hash(password, 12)
-  } catch (err) {
-    const error = new HttpError("Could not update user, pleasy try again.", 500);
-    return next(error);
-  }
+  //Päivitetään salasana siinä tapauksessa, että saadaan arvo. Jos arvo on tyhjä ei päivitetä salasanaa.
+  if (typeof password !== "undefined" && password !== "" && typeof password === "string") {
+    let hashedPassword;
+    try {
+      hashedPassword = await bcrypt.hash(password, 12)
+    } catch (err) {
+      const error = new HttpError("Could not update user, pleasy try again.", 500);
+      return next(error);
+    }
 
-  const editUser = {
+    editUser = {
+      firstname,
+      lastname,
+      email,
+      password: hashedPassword,
+      admin
+    };
+}
+else {
+  editUser = {
     firstname,
     lastname,
     email,
-    password: hashedPassword,
-    admin: true
+    admin
   };
+} 
 
   try {
     await User.update(editUser, {where: {id: userId}});
