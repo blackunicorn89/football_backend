@@ -209,7 +209,7 @@ const deletePlayer = async (req, res, next) => {
 
 
 // Lisää pelaajan pisteet
-const addGoalPoints = async (goalMakers) => { 
+const addGoalPoints = async (goalMakers, next) => { 
 
   //Muuttujat
   let currentGoalMakerPoints = 0;
@@ -262,7 +262,7 @@ const addGoalPoints = async (goalMakers) => {
       //Päivitetään kantaan pelaajan uudet pisteet
       await Player.update(addGoalPoints, {where:{id: goalMakerId}})
     }
-  } catch {
+  } catch (err){
     const error = new HttpError(
       "Adding points failed, try again later",
       500
@@ -272,7 +272,7 @@ const addGoalPoints = async (goalMakers) => {
 }
 
 //Muokkaa pelaajan pisteet. 
-const editGoalPoints = async (currentGoalMakers, newGoalMakers) => {
+const editGoalPoints = async (currentGoalMakers, newGoalMakers, next) => {
 
   //Muuttujat
   let currentGoalMakerPoints = 0;
@@ -377,7 +377,7 @@ const editGoalPoints = async (currentGoalMakers, newGoalMakers) => {
     
     }
 }
-catch {
+catch (err) {
   const error = new HttpError(
     "Editing player's goal points failed, try again later",
     500
@@ -388,7 +388,7 @@ catch {
 };
 
 // Poistaa pelaajan pisteet (AUTH)
-const deleteGoalPoints = async (goalMakers) => {
+const deleteGoalPoints = async (goalMakers, next) => {
   
 
   //Muuttujat
